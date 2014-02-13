@@ -15,12 +15,14 @@ public class TinyVM {
 				OpCode opcode = OpCode.get((byte)currentByte);
 				switch(opcode) {
 					case NOP:
-							NopInstruction nop = new NopInstruction();
-							nop.read(fiStream);
-							System.out.println("NOP!");
+						NopInstruction nop = new NopInstruction();
+						nop.read(fiStream);
+						System.out.println("NOP");
 						break;
 					case PUSH:
-						System.out.println("PUSH!");
+						PushInstruction push = new PushInstruction();
+						push.read(fiStream);
+						System.out.println("PUSH\t" + push.getType() + "\t" + push.getValue());
 						break;
 					case POP:
 						System.out.println("POP!");

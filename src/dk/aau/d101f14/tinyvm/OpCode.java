@@ -1,4 +1,4 @@
-package dk.aau.d101f14.tinyvm.instructions;
+package dk.aau.d101f14.tinyvm;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +11,7 @@ public enum OpCode {
 	STORE((byte)4),
 	GOTO((byte)5),
 	IF((byte)6),
-	ARIT((byte)7),
+	COMP((byte)7),
 	NEW((byte)8),
 	GETFIELD((byte)9),
 	PUTFIELD((byte)10),
