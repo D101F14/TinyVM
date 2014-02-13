@@ -9,26 +9,55 @@ import dk.aau.d101f14.tinyvm.instructions.*;
 public class TinyVM {
 	public static void main(String[] args) {
 		try {
-			FileInputStream	fiStream = new FileInputStream(args[0]);
+			FileInputStream	stream = new FileInputStream(args[0]);
 			int currentByte;
-			while((currentByte = fiStream.read()) != -1) {
+			while((currentByte = stream.read()) != -1) {
 				OpCode opcode = OpCode.get((byte)currentByte);
 				switch(opcode) {
 					case NOP:
 						NopInstruction nop = new NopInstruction();
-						nop.read(fiStream);
+						nop.read(stream);
 						System.out.println("NOP");
 						break;
 					case PUSH:
 						PushInstruction push = new PushInstruction();
-						push.read(fiStream);
+						push.read(stream);
 						System.out.println("PUSH\t" + push.getType() + "\t" + push.getValue());
 						break;
 					case POP:
-						System.out.println("POP!");
+						PopInstruction pop = new PopInstruction();
+						pop.read(stream);
+						System.out.println("POP\t" + pop.getNumber());
 						break;
 					case LOAD:
-						System.out.println("LOAD!");
+						LoadInstruction load = new LoadInstruction();
+						load.read(stream);
+						System.out.println("LOAD\t" + load.getType() + "\t" + load.getAddress());
+						break;
+					case STORE:
+						StoreInstruction store = new StoreInstruction();
+						store.read(stream);
+						System.out.println("STORE\t" + store.getType() + "\t" + store.getAddress());
+						break;
+					case GOTO:
+						GotoInstruction goto1 = new GotoInstruction();
+						goto1.read(stream);
+						System.out.println("GOTO\t" + goto1.getAddress());
+						break;
+					case IF:
+						IfInstruction if1 = new IfInstruction();
+						if1.read(stream);
+						System.out.println("IF\t" + if1.getOperator() + "\t" + if1.getAddress());
+						break;
+					case COMP:
+						CompInstruction comp = new CompInstruction();
+						comp.read(stream);
+						System.out.println("COMP\t" + comp.getOperator());
+						break;
+					case RETURN:
+						ReturnInstruction return1 = new ReturnInstruction();
+						return1.read(stream);
+						System.out.println("RETURN\t" + return1.getType());
 						break;
 					default:
 						break;

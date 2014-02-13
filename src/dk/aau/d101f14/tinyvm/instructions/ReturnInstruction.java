@@ -22,5 +22,9 @@ public class ReturnInstruction extends Instruction {
 			e.printStackTrace();
 		}
 	}
+	
+	public Type getType() {
+		return type;
+	}
 
 }
