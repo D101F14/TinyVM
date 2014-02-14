@@ -14,7 +14,7 @@ public enum Type {
 		this.type = type;
 	}
 	
-	public byte getType() {
+	public byte getByte() {
 		return type;
 	}
 	
@@ -22,7 +22,7 @@ public enum Type {
 	  
 	static {
 		for(Type type : Type.values()) {
-			lookup.put(type.getType(), type);
+			lookup.put(type.getByte(), type);
 		}
 	}
 	

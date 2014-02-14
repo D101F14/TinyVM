@@ -23,7 +23,7 @@ public enum OpCode {
 		this.opcode = opcode;
 	}
 	
-	public byte getOpCode() {
+	public byte getByte() {
 		return opcode;
 	}
 	
@@ -31,7 +31,7 @@ public enum OpCode {
 	  
 	static {
 		for(OpCode opcode : OpCode.values()) {
-			lookup.put(opcode.getOpCode(), opcode);
+			lookup.put(opcode.getByte(), opcode);
 		}
 	}
 	

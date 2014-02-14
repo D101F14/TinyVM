@@ -27,7 +27,7 @@ public enum Operator {
 		this.operator = operator;
 	}
 	
-	public byte getOperator() {
+	public byte getByte() {
 		return operator;
 	}
 	
@@ -35,7 +35,7 @@ public enum Operator {
 	  
 	static {
 		for(Operator operator : Operator.values()) {
-			lookup.put(operator.getOperator(), operator);
+			lookup.put(operator.getByte(), operator);
 		}
 	}
 	
