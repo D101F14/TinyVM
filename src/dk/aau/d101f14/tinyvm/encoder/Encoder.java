@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import dk.aau.d101f14.tinyvm.OpCode;
 import dk.aau.d101f14.tinyvm.Type;
+import dk.aau.d101f14.tinyvm.Operator;
 
 public class Encoder {
 	public static void main(String[] args) {
@@ -15,38 +16,73 @@ public class Encoder {
 			while(reader.ready()) {
 				String[] instructionString = reader.readLine().split("\t");
 				switch(instructionString[0]) {
-					case "NOP":
+					case "NOP": {
 						System.out.write(OpCode.NOP.getByte());
 						break;
-					case "PUSH":
+					}
+					case "PUSH":  {
 						System.out.write(OpCode.PUSH.getByte());
 						System.out.write(Type.valueOf(instructionString[1]).getByte());
 						short value = Short.parseShort(instructionString[2]);
 						if(Type.valueOf(instructionString[1]) == Type.INT) {
-							byte value1 = (byte)((value & 0xFF00) >> 8);
-							System.out.write(value1);
+							System.out.write((byte)((value & 0xFF00) >> 8));
 						}
 						System.out.write(value);
 						break;
-					case "POP":
+					}
+					case "POP": {
+						System.out.write(OpCode.POP.getByte());
+						System.out.write(Byte.parseByte(instructionString[1]));
 						break;
-					case "LOAD":
+					}
+					case "LOAD": {
+						System.out.write(OpCode.LOAD.getByte());
+						System.out.write(Type.valueOf(instructionString[1]).getByte());
+						short address = Short.parseShort(instructionString[2]);
+						System.out.write((byte)((address & 0xFF00) >> 8));
+						System.out.write(address);
 						break;
-					case "STORE":
+					}
+					case "STORE": {
+						System.out.write(OpCode.STORE.getByte());
+						System.out.write(Type.valueOf(instructionString[1]).getByte());
+						short address = Short.parseShort(instructionString[2]);
+						System.out.write((byte)((address & 0xFF00) >> 8));
+						System.out.write(address);
 						break;
-					case "GOTO":
+					}
+					case "GOTO": {
+						System.out.write(OpCode.GOTO.getByte());
+						short address = Short.parseShort(instructionString[1]);
+						System.out.write((byte)((address & 0xFF00) >> 8));
+						System.out.write(address);
 						break;
-					case "IF":
+					}
+					case "IF": {
+						System.out.write(OpCode.IF.getByte());
+						System.out.write(Operator.valueOf(instructionString[1]).getByte());
+						short address = Short.parseShort(instructionString[2]);
+						System.out.write((byte)((address & 0xFF00) >> 8));
+						System.out.write(address);
 						break;
-					case "COMP":
+					}
+					case "COMP": {
+						System.out.write(OpCode.COMP.getByte());
+						System.out.write(Operator.valueOf(instructionString[1]).getByte());
 						break;
-					case "RETURN":
+					}
+					case "RETURN": {
+						System.out.write(OpCode.RETURN.getByte());
+						System.out.write(Type.valueOf(instructionString[1]).getByte());
 						break;
-					default:
+					}
+					default: {
 						break;
+					}
 				}
 			}
 			System.out.flush();
+			reader.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
