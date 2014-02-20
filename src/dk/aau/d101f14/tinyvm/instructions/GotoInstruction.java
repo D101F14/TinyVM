@@ -4,14 +4,19 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import dk.aau.d101f14.tinyvm.OpCode;
+import dk.aau.d101f14.tinyvm.TinyVM;
 
 public class GotoInstruction extends Instruction {
 
 	byte address1;
 	byte address2;
 	
-	public GotoInstruction() {
-		super(OpCode.GOTO);
+	public GotoInstruction(TinyVM tinyVM) {
+		super(tinyVM, OpCode.GOTO);
+	}
+	
+	public int getAddress() {
+		return address1 << 8 | address2;
 	}
 	
 	@Override
@@ -24,7 +29,13 @@ public class GotoInstruction extends Instruction {
 		}
 	}
 
-	public int getAddress() {
-		return address1 << 8 | address2;
+	@Override
+	public void execute() {
+		// Set code pointer to address.
+		tinyVM.setCodePointer(getAddress());
+		
+		if(tinyVM.getDebug()) {
+			System.out.println("GOTO\t" + getAddress());
+		}
 	}
 }

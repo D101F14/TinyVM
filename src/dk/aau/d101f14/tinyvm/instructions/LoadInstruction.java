@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import dk.aau.d101f14.tinyvm.OpCode;
+import dk.aau.d101f14.tinyvm.TinyVM;
 import dk.aau.d101f14.tinyvm.Type;
 
 public class LoadInstruction extends Instruction {
@@ -12,10 +13,18 @@ public class LoadInstruction extends Instruction {
 	byte address1;
 	byte address2;
 	
-	public LoadInstruction() {
-		super(OpCode.LOAD);
+	public LoadInstruction(TinyVM tinyVM) {
+		super(tinyVM, OpCode.LOAD);
 	}
 
+	public Type getType() {
+		return type;
+	}
+	
+	public int getAddress() {
+		return address1 << 8 | address2;
+	}
+	
 	@Override
 	public void read(InputStream stream) {
 		try {
@@ -26,13 +35,15 @@ public class LoadInstruction extends Instruction {
 			e.printStackTrace();
 		}
 	}
-	
-	public Type getType() {
-		return type;
-	}
-	
-	public int getAddress() {
-		return address1 << 8 | address2;
+
+	@Override
+	public void execute() {
+		//Increment code pointer
+		tinyVM.setCodePointer(tinyVM.getCodePointer() + 1);
+		
+		if(tinyVM.getDebug()) {
+			System.out.println("LOAD\t" + getType() + "\t" + getAddress());		
+		}
 	}
 
 }

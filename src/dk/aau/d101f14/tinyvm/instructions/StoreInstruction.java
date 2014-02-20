@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import dk.aau.d101f14.tinyvm.OpCode;
+import dk.aau.d101f14.tinyvm.TinyVM;
 import dk.aau.d101f14.tinyvm.Type;
 
 public class StoreInstruction extends Instruction {
@@ -12,8 +13,16 @@ public class StoreInstruction extends Instruction {
 	byte address1;
 	byte address2;
 	
-	public StoreInstruction() {
-		super(OpCode.STORE);
+	public StoreInstruction(TinyVM tinyVM) {
+		super(tinyVM, OpCode.STORE);
+	}
+	
+	public Type getType() {
+		return type;
+	}
+	
+	public int getAddress() {
+		return address1 << 8 | address2;
 	}
 	
 	@Override
@@ -27,12 +36,14 @@ public class StoreInstruction extends Instruction {
 		}
 	}
 	
-	public Type getType() {
-		return type;
-	}
-	
-	public int getAddress() {
-		return address1 << 8 | address2;
+	@Override
+	public void execute() {
+		//Increment code pointer
+		tinyVM.setCodePointer(tinyVM.getCodePointer() + 1);
+		
+		if(tinyVM.getDebug()) {
+			System.out.println("STORE\t" + getType() + "\t" + getAddress());
+		}
 	}
 
 }

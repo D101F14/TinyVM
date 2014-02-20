@@ -4,14 +4,19 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import dk.aau.d101f14.tinyvm.OpCode;
+import dk.aau.d101f14.tinyvm.TinyVM;
 import dk.aau.d101f14.tinyvm.Type;
 
 public class ReturnInstruction extends Instruction {
 
 	Type type;
 	
-	public ReturnInstruction() {
-		super(OpCode.RETURN);
+	public ReturnInstruction(TinyVM tinyVM) {
+		super(tinyVM, OpCode.RETURN);
+	}
+	
+	public Type getType() {
+		return type;
 	}
 	
 	@Override
@@ -22,9 +27,15 @@ public class ReturnInstruction extends Instruction {
 			e.printStackTrace();
 		}
 	}
-	
-	public Type getType() {
-		return type;
+
+	@Override
+	public void execute() {
+		//Increment code pointer
+		tinyVM.setCodePointer(tinyVM.getCodePointer() + 1);
+		
+		if(tinyVM.getDebug()) {
+			System.out.println("RETURN\t" + getType());
+		}
 	}
 
 }

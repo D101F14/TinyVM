@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import dk.aau.d101f14.tinyvm.OpCode;
+import dk.aau.d101f14.tinyvm.TinyVM;
 import dk.aau.d101f14.tinyvm.Type;
 
 public class PushInstruction extends Instruction {
@@ -12,8 +13,21 @@ public class PushInstruction extends Instruction {
 	byte value;
 	byte value2;
 	
-	public PushInstruction() {
-		super(OpCode.PUSH);
+	public PushInstruction(TinyVM tinyVM) {
+		super(tinyVM, OpCode.PUSH);
+	}
+	
+	
+	public Type getType() {
+		return type;
+	}
+	
+	public int getValue() {
+		if(type != Type.INT) {
+			return value;
+		} else {
+			return value << 8 | value2;
+		}
 	}
 	
 	@Override
@@ -28,16 +42,17 @@ public class PushInstruction extends Instruction {
 			e.printStackTrace();
 		}
 	}
-	
-	public Type getType() {
-		return type;
-	}
-	
-	public int getValue() {
-		if(type != Type.INT) {
-			return value;
-		} else {
-			return value << 8 | value2;
+
+	@Override
+	public void execute() {
+		//Push value to operand stack
+		tinyVM.getOperandStack().push(getValue());
+				
+		//Increment code pointer
+		tinyVM.setCodePointer(tinyVM.getCodePointer() + 1);
+		
+		if(tinyVM.getDebug()) {
+			System.out.println("PUSH\t" + getType() + "\t" + getValue());
 		}
 	}
 

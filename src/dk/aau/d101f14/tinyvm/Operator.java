@@ -7,7 +7,7 @@ public enum Operator {
 	EQUALS((byte)0),
 	NEQUALS((byte)1),
 	GT((byte)2),
-	LS((byte)3),
+	LT((byte)3),
 	NEG((byte)4),
 	ADD((byte)5),
 	SUB((byte)6),

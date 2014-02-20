@@ -13,6 +13,9 @@ public class Encoder {
 	public static void main(String[] args) {
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(args[0]));
+			short numInstructions = Short.parseShort(reader.readLine());
+			System.out.write((byte)((numInstructions & 0xFF00) >> 8));
+			System.out.write(numInstructions);
 			while(reader.ready()) {
 				String[] instructionString = reader.readLine().split("\t");
 				switch(instructionString[0]) {

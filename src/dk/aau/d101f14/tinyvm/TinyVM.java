@@ -3,70 +3,115 @@ package dk.aau.d101f14.tinyvm;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Stack;
 
 import dk.aau.d101f14.tinyvm.instructions.*;
 
 public class TinyVM {
-	public static void main(String[] args) {
+	
+	boolean debug;
+	
+	int codePointer;
+	Stack<Integer> operandStack;
+	Instruction[] callStack;
+		
+	public TinyVM(String fileString) {
+		codePointer = 0;
+		operandStack = new Stack<Integer>();
+		load(fileString);
+		debug = false;
+	}
+	
+	public void execute() {
+		callStack[codePointer].execute();
+	}
+	
+	public void setDebug(boolean debug) {
+		this.debug = debug;
+	}
+	
+	public boolean getDebug() {
+		return debug;
+	}
+	
+	public int getCodePointer() {
+		return codePointer;
+	}
+	
+	public void setCodePointer(int address) {
+		codePointer = address;
+	}
+	
+	public Instruction getCurrentInstruction() {
+		return callStack[codePointer];
+	}
+	
+	public Instruction[] getCallStack() {
+		return callStack;
+	}
+	
+	public Stack<Integer> getOperandStack() {
+		return operandStack;
+	}
+	
+	public void load(String fileString) {
 		try {
-			FileInputStream	stream = new FileInputStream(args[0]);
-			int currentByte;
-			while((currentByte = stream.read()) != -1) {
-				OpCode opcode = OpCode.get((byte)currentByte);
+			FileInputStream	stream = new FileInputStream(fileString);
+			int numInstructions = stream.read() << 8 | stream.read();
+			callStack = new Instruction[numInstructions];
+			int index = 0;
+			while(index < numInstructions) {
+				Instruction instruction = null;
+				OpCode opcode = OpCode.get((byte)stream.read());
 				switch(opcode) {
 					case NOP:
-						NopInstruction nop = new NopInstruction();
-						nop.read(stream);
-						System.out.println("NOP");
+						instruction = new NopInstruction(this);
 						break;
 					case PUSH:
-						PushInstruction push = new PushInstruction();
-						push.read(stream);
-						System.out.println("PUSH\t" + push.getType() + "\t" + push.getValue());
+						instruction = new PushInstruction(this);
 						break;
 					case POP:
-						PopInstruction pop = new PopInstruction();
-						pop.read(stream);
-						System.out.println("POP\t" + pop.getNumber());
+						instruction = new PopInstruction(this);
 						break;
 					case LOAD:
-						LoadInstruction load = new LoadInstruction();
-						load.read(stream);
-						System.out.println("LOAD\t" + load.getType() + "\t" + load.getAddress());
+						instruction = new LoadInstruction(this);
 						break;
 					case STORE:
-						StoreInstruction store = new StoreInstruction();
-						store.read(stream);
-						System.out.println("STORE\t" + store.getType() + "\t" + store.getAddress());
+						instruction = new StoreInstruction(this);
 						break;
 					case GOTO:
-						GotoInstruction goto1 = new GotoInstruction();
-						goto1.read(stream);
-						System.out.println("GOTO\t" + goto1.getAddress());
+						instruction = new GotoInstruction(this);
 						break;
 					case IF:
-						IfInstruction if1 = new IfInstruction();
-						if1.read(stream);
-						System.out.println("IF\t" + if1.getOperator() + "\t" + if1.getAddress());
+						instruction = new IfInstruction(this);
 						break;
 					case COMP:
-						CompInstruction comp = new CompInstruction();
-						comp.read(stream);
-						System.out.println("COMP\t" + comp.getOperator());
+						instruction = new CompInstruction(this);
 						break;
 					case RETURN:
-						ReturnInstruction return1 = new ReturnInstruction();
-						return1.read(stream);
-						System.out.println("RETURN\t" + return1.getType());
-						break;
-					default:
+						instruction = new ReturnInstruction(this);
 						break;
 				}
+				instruction.read(stream);
+				callStack[index] = instruction;
+				index++;
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	
+	public static void main(String[] args) {
+		TinyVM tinyVM = new TinyVM(args[0]);
+		tinyVM.setDebug(true);
+		while(tinyVM.getCodePointer() < tinyVM.getCallStack().length) {
+			if(tinyVM.getDebug()) {
+				System.out.print(tinyVM.getCodePointer() + ":\t");
+			}
+			tinyVM.execute();
 		}
 	}
 }
