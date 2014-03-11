@@ -7,7 +7,8 @@ public enum Type {
 	VOID((byte)0),
 	BOOLEAN((byte)1),
 	BYTE((byte)2),
-	INT((byte)3);
+	INT((byte)3),
+	REF((byte)4);
 	
 	private final byte type;
 	Type(byte type) {

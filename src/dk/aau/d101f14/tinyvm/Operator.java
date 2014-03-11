@@ -16,11 +16,10 @@ public enum Operator {
 	MOD((byte)9),
 	SHL((byte)10),
 	SHR((byte)11),
-	USHL((byte)12),
-	USHR((byte)13),
-	AND((byte)14),
-	OR((byte)15),
-	XOR((byte)16);
+	USHR((byte)12),
+	AND((byte)13),
+	OR((byte)14),
+	XOR((byte)15);
 	
 	private final byte operator;
 	Operator(byte operator) {

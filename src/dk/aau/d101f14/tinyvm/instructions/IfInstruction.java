@@ -63,6 +63,8 @@ public class IfInstruction extends Instruction {
 		case XOR:
 			expression = (value1 != 0) ^ (value2 != 0);
 			break;
+		default:
+			break;
 		}
 		
 		if(expression) {
