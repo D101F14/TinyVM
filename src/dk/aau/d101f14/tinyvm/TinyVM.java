@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
 
-import dk.aau.d101f14.tinyvm.instructions.*;
-
 public class TinyVM {
 	
 	boolean debug;
@@ -58,7 +56,7 @@ public class TinyVM {
 				System.err.println("Invalid TinyClass file.");
 				System.exit(1);
 			}
-			TinyClass tinyClass = new TinyClass();
+			TinyClass tinyClass = new TinyClass(this);
 			tinyClass.read(stream);
 			classes.put(className, tinyClass);
 		} catch (FileNotFoundException e) {
@@ -70,12 +68,13 @@ public class TinyVM {
 	
 	
 	public static void main(String[] args) {
-		TinyVM tinyVM = new TinyVM();
-		tinyVM.rootDirectory = args[0].substring(0, args[0].lastIndexOf("/"));
-		tinyVM.setDebug(true);
-		tinyVM.loadList.add(args[0].substring(args[0].lastIndexOf("/") + 1));
-		while(!tinyVM.loadList.isEmpty()) {
-			tinyVM.load(tinyVM.loadList.remove(0));
+		TinyVM tinyVm = new TinyVM();
+		tinyVm.rootDirectory = args[0].substring(0, args[0].lastIndexOf("/"));
+		tinyVm.setDebug(true);
+		String className = args[0].substring(args[0].lastIndexOf("/") + 1);
+		tinyVm.loadList.add(className);
+		while(!tinyVm.loadList.isEmpty()) {
+			tinyVm.load(tinyVm.loadList.remove(0));
 		}
 	}
 }

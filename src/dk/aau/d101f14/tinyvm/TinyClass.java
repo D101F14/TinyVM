@@ -2,9 +2,20 @@ package dk.aau.d101f14.tinyvm;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 
 public class TinyClass {
+	TinyVM tinyVm;
+	
 	CPInfo[] constantPool;
+	int thisRef;
+	int superRef;
+	int methodCount;
+	HashMap<String, TinyMethod> methods;
+	
+	public TinyClass(TinyVM tinyVm) {
+		this.tinyVm = tinyVm;
+	}
 	
 	public void read(InputStream stream) {
 		try {
@@ -57,6 +68,26 @@ public class TinyClass {
 						break;
 					}
 				}
+			}
+			thisRef = stream.read() << 8 | stream.read();
+			superRef = stream.read() << 8 | stream.read();
+			methodCount = stream.read() << 8 | stream.read();
+			methods = new HashMap<String, TinyMethod>();
+			for(int i = 0; i < methodCount; i++) {
+				TinyMethod method = new TinyMethod();
+				method.read(stream);
+				MethodDescriptorInfo methodDescriptor = (MethodDescriptorInfo)constantPool[method.methodDescriptor];
+				String methodName = ((StringInfo)constantPool[methodDescriptor.methodName]).getBytesString();
+				methodName += "(";
+				for(int j = 0; j < methodDescriptor.argCount; j++) {
+					String argType = String.valueOf(((TypeInfo)constantPool[methodDescriptor.argTypes[j]]).type);
+					methodName += argType;
+					if(j < methodDescriptor.argCount) {
+						methodName += ", ";
+					}
+				}
+				methodName += ")";
+				methods.put(methodName, method);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
