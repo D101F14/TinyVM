@@ -32,9 +32,9 @@ public class GotoInstruction extends Instruction {
 	@Override
 	public void execute() {
 		// Set code pointer to address.
-		tinyVM.setCodePointer(getAddress());
+		tinyVm.getCurrentFrame().setCodePointer(getAddress());
 		
-		if(tinyVM.getDebug()) {
+		if(tinyVm.getDebug()) {
 			System.out.println("GOTO\t" + getAddress());
 		}
 	}

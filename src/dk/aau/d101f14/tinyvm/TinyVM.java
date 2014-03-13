@@ -12,15 +12,13 @@ public class TinyVM {
 	
 	boolean debug;
 	
-	int codePointer;
-	Stack<Integer> operandStack;
 	HashMap<String, TinyClass> classes;
 	ArrayList<String> loadList;
 	String rootDirectory;
+	Stack<TinyFrame> callStack;
+	TinyObject[] heap;
 	
 	public TinyVM() {
-		codePointer = 0;
-		operandStack = new Stack<Integer>();
 		classes = new HashMap<String, TinyClass>();
 		loadList = new ArrayList<String>();
 		debug = false;
@@ -34,16 +32,12 @@ public class TinyVM {
 		return debug;
 	}
 	
-	public int getCodePointer() {
-		return codePointer;
+	public Stack<TinyFrame> getCallStack() {
+		return callStack;
 	}
 	
-	public void setCodePointer(int address) {
-		codePointer = address;
-	}
-	
-	public Stack<Integer> getOperandStack() {
-		return operandStack;
+	public TinyFrame getCurrentFrame() {
+		return callStack.peek();
 	}
 	
 	public void load(String className) {
@@ -66,15 +60,14 @@ public class TinyVM {
 		}
 	}
 	
-	
 	public static void main(String[] args) {
 		TinyVM tinyVm = new TinyVM();
 		tinyVm.rootDirectory = args[0].substring(0, args[0].lastIndexOf("/"));
 		tinyVm.setDebug(true);
 		String className = args[0].substring(args[0].lastIndexOf("/") + 1);
 		tinyVm.loadList.add(className);
-		while(!tinyVm.loadList.isEmpty()) {
-			tinyVm.load(tinyVm.loadList.remove(0));
+		for(int i = 0; i < tinyVm.loadList.size(); i++) {
+			tinyVm.load(tinyVm.loadList.get(i));
 		}
 	}
 }

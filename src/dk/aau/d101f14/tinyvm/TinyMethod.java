@@ -32,4 +32,34 @@ public class TinyMethod {
 			e.printStackTrace();
 		}
 	}
+
+	public int getMethodDescriptor() {
+		return methodDescriptor;
+	}
+
+	public int getMaxStack() {
+		return maxStack;
+	}
+
+	public int getMaxLocals() {
+		return maxLocals;
+	}
+
+	public int getCodeLength() {
+		return codeLength;
+	}
+
+	public byte[] getCode() {
+		return code;
+	}
+
+	public int getHandlerCount() {
+		return handlerCount;
+	}
+
+	public TinyHandler[] getHandlers() {
+		return handlers;
+	}
+	
+	
 }

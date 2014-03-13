@@ -6,12 +6,12 @@ import dk.aau.d101f14.tinyvm.OpCode;
 import dk.aau.d101f14.tinyvm.TinyVM;
 
 public abstract class Instruction {
-	TinyVM tinyVM;
+	TinyVM tinyVm;
 	OpCode opcode;
 
 	
-	public Instruction(TinyVM tinyVM, OpCode opcode) {
-		this.tinyVM = tinyVM;
+	public Instruction(TinyVM tinyVm, OpCode opcode) {
+		this.tinyVm = tinyVm;
 		this.opcode = opcode;
 	}
 	

@@ -46,12 +46,12 @@ public class PushInstruction extends Instruction {
 	@Override
 	public void execute() {
 		//Push value to operand stack
-		tinyVM.getOperandStack().push(getValue());
+		tinyVm.getCurrentFrame().getOperandStack().push(getValue());
 				
 		//Increment code pointer
-		tinyVM.setCodePointer(tinyVM.getCodePointer() + 1);
+		tinyVm.getCurrentFrame().setCodePointer(tinyVm.getCurrentFrame().getCodePointer() + 1);
 		
-		if(tinyVM.getDebug()) {
+		if(tinyVm.getDebug()) {
 			System.out.println("PUSH\t" + getType() + "\t" + getValue());
 		}
 	}

@@ -31,13 +31,13 @@ public class PopInstruction extends Instruction {
 	public void execute() {
 		// Pop n elements from stack
 		for(int i = 0; i < number; i++) {
-			tinyVM.getOperandStack().pop();
+			tinyVm.getCurrentFrame().getOperandStack().pop();
 		}
 		
 		// Increment code pointer
-		tinyVM.setCodePointer(tinyVM.getCodePointer() + 1);
+		tinyVm.getCurrentFrame().setCodePointer(tinyVm.getCurrentFrame().getCodePointer() + 1);
 		
-		if(tinyVM.getDebug()) {
+		if(tinyVm.getDebug()) {
 			System.out.println("POP\t" + getNumber());
 		}
 	}

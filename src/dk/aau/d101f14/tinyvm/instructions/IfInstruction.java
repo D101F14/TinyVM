@@ -39,8 +39,8 @@ public class IfInstruction extends Instruction {
 	@Override
 	public void execute() {
 		boolean expression = false;
-		int value1 = tinyVM.getOperandStack().pop();
-		int value2 = tinyVM.getOperandStack().pop();
+		int value1 = tinyVm.getCurrentFrame().getOperandStack().pop();
+		int value2 = tinyVm.getCurrentFrame().getOperandStack().pop();
 		switch(operator) {
 		case EQUALS:
 			expression = value1 == value2;
@@ -68,12 +68,12 @@ public class IfInstruction extends Instruction {
 		}
 		
 		if(expression) {
-			tinyVM.setCodePointer(getAddress());
+			tinyVm.getCurrentFrame().setCodePointer(getAddress());
 		} else {
-			tinyVM.setCodePointer(tinyVM.getCodePointer() + 1);
+			tinyVm.getCurrentFrame().setCodePointer(tinyVm.getCurrentFrame().getCodePointer() + 1);
 		}
 		
-		if(tinyVM.getDebug()) {
+		if(tinyVm.getDebug()) {
 			System.out.println("IF\t" + getOperator() + "\t" + getAddress());
 		}
 	}

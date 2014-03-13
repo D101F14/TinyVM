@@ -31,9 +31,9 @@ public class ReturnInstruction extends Instruction {
 	@Override
 	public void execute() {
 		//Increment code pointer
-		tinyVM.setCodePointer(tinyVM.getCodePointer() + 1);
+		tinyVm.getCurrentFrame().setCodePointer(tinyVm.getCurrentFrame().getCodePointer() + 1);
 		
-		if(tinyVM.getDebug()) {
+		if(tinyVm.getDebug()) {
 			System.out.println("RETURN\t" + getType());
 		}
 	}

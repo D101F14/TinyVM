@@ -9,7 +9,7 @@ public class TinyClass {
 	
 	CPInfo[] constantPool;
 	int thisRef;
-	int superRef;
+	Integer superRef;
 	int methodCount;
 	HashMap<String, TinyMethod> methods;
 	
@@ -71,6 +71,9 @@ public class TinyClass {
 			}
 			thisRef = stream.read() << 8 | stream.read();
 			superRef = stream.read() << 8 | stream.read();
+			if(thisRef == superRef) {
+				superRef = null;
+			}
 			methodCount = stream.read() << 8 | stream.read();
 			methods = new HashMap<String, TinyMethod>();
 			for(int i = 0; i < methodCount; i++) {
@@ -88,6 +91,14 @@ public class TinyClass {
 				}
 				methodName += ")";
 				methods.put(methodName, method);
+			}
+			for(CPInfo cpInfo : constantPool) {
+				if(cpInfo instanceof ClassNameInfo) {
+					String className = ((StringInfo)constantPool[((ClassNameInfo)cpInfo).className]).getBytesString();
+					if(!tinyVm.loadList.contains(className)) {
+						tinyVm.loadList.add(className);
+					}
+				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
