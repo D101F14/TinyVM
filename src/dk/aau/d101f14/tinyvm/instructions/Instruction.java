@@ -15,7 +15,7 @@ public abstract class Instruction {
 		this.opcode = opcode;
 	}
 	
-	public abstract void read(InputStream stream);
+	public abstract void read(byte[] code, int opCodeIndex);
 	
 	public abstract void execute();
 	

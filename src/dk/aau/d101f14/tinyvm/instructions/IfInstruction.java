@@ -26,14 +26,10 @@ public class IfInstruction extends Instruction {
 	}
 	
 	@Override
-	public void read(InputStream stream) {
-		try {
-			operator = Operator.get((byte) stream.read());
-			address1 = (byte) stream.read();
-			address2 = (byte) stream.read();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public void read(byte[] code, int opCodeIndex) {
+		operator = Operator.get(code[opCodeIndex + 1]);
+		address1 = code[opCodeIndex + 2];
+		address2 = code[opCodeIndex + 3];
 	}
 
 	@Override
@@ -70,7 +66,7 @@ public class IfInstruction extends Instruction {
 		if(expression) {
 			tinyVm.getCurrentFrame().setCodePointer(getAddress());
 		} else {
-			tinyVm.getCurrentFrame().setCodePointer(tinyVm.getCurrentFrame().getCodePointer() + 1);
+			tinyVm.getCurrentFrame().incrementCodePointer(4);
 		}
 		
 		if(tinyVm.getDebug()) {

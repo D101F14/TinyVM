@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class TinyMethod {
+	TinyClass tinyClass;
 	int methodDescriptor;
 	int maxStack;
 	int maxLocals;
@@ -11,6 +12,10 @@ public class TinyMethod {
 	byte[] code;
 	int handlerCount;
 	TinyHandler[] handlers;
+	
+	public TinyMethod(TinyClass tinyClass) {
+		this.tinyClass = tinyClass;
+	}
 	
 	public void read(InputStream stream) {
 		try {
@@ -59,6 +64,10 @@ public class TinyMethod {
 
 	public TinyHandler[] getHandlers() {
 		return handlers;
+	}
+	
+	public TinyClass getTinyClass() {
+		return tinyClass;
 	}
 	
 	

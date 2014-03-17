@@ -1,8 +1,5 @@
 package dk.aau.d101f14.tinyvm.instructions;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import dk.aau.d101f14.tinyvm.OpCode;
 import dk.aau.d101f14.tinyvm.TinyVM;
 import dk.aau.d101f14.tinyvm.Type;
@@ -26,20 +23,16 @@ public class LoadInstruction extends Instruction {
 	}
 	
 	@Override
-	public void read(InputStream stream) {
-		try {
-			type = Type.get((byte) stream.read());
-			address1 = (byte) stream.read();
-			address2 = (byte) stream.read();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public void read(byte[] code, int opCodeIndex) {
+		type = Type.get(code[opCodeIndex + 1]);
+		address1 = code[opCodeIndex + 2];
+		address2 = code[opCodeIndex + 3];
 	}
 
 	@Override
 	public void execute() {
 		//Increment code pointer
-		tinyVm.getCurrentFrame().setCodePointer(tinyVm.getCurrentFrame().getCodePointer() + 1);
+		tinyVm.getCurrentFrame().incrementCodePointer(4);
 		
 		if(tinyVm.getDebug()) {
 			System.out.println("LOAD\t" + getType() + "\t" + getAddress());		

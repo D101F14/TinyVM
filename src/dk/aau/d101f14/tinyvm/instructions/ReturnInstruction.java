@@ -1,8 +1,5 @@
 package dk.aau.d101f14.tinyvm.instructions;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import dk.aau.d101f14.tinyvm.OpCode;
 import dk.aau.d101f14.tinyvm.TinyVM;
 import dk.aau.d101f14.tinyvm.Type;
@@ -20,18 +17,19 @@ public class ReturnInstruction extends Instruction {
 	}
 	
 	@Override
-	public void read(InputStream stream) {
-		try {
-			type = Type.get((byte) stream.read());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public void read(byte[] code, int opCodeIndex) {
+		type = Type.get(code[opCodeIndex + 1]);
 	}
 
 	@Override
 	public void execute() {
-		//Increment code pointer
-		tinyVm.getCurrentFrame().setCodePointer(tinyVm.getCurrentFrame().getCodePointer() + 1);
+		int value = tinyVm.getCurrentFrame().getOperandStack().pop();
+		
+		tinyVm.getCallStack().pop();
+		
+		tinyVm.getCurrentFrame().getOperandStack().push(value);
+		
+		tinyVm.getCurrentFrame().incrementCodePointer(3);
 		
 		if(tinyVm.getDebug()) {
 			System.out.println("RETURN\t" + getType());

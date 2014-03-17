@@ -1,6 +1,27 @@
 package dk.aau.d101f14.tinyvm;
 
+import java.util.HashMap;
+
 public class TinyObject {
-	String className; 
-	int[] fields;
+	TinyClass tinyClass;
+	HashMap<String, Integer> fields;
+	
+	public HashMap<String, Integer> getFields() {
+		return fields;
+	}
+	
+	public TinyObject(TinyClass tinyClass) {
+		this.tinyClass = tinyClass;
+		fields = new HashMap<String, Integer>();
+		addFields(this.tinyClass);
+	}
+	
+	public void addFields(TinyClass tinyClass) {
+		for(String fieldName : tinyClass.getFields()) {
+			fields.put(fieldName, 0);
+		}
+		if(tinyClass.getSuperClass() != null) {
+			addFields(tinyClass);
+		}
+	}
 }

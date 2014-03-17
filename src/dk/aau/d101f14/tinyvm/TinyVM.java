@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Stack;
 
 public class TinyVM {
-	
 	boolean debug;
 	
 	HashMap<String, TinyClass> classes;
@@ -17,6 +16,7 @@ public class TinyVM {
 	String rootDirectory;
 	Stack<TinyFrame> callStack;
 	TinyObject[] heap;
+	int heapCounter;
 	
 	public TinyVM() {
 		classes = new HashMap<String, TinyClass>();
@@ -38,6 +38,22 @@ public class TinyVM {
 	
 	public TinyFrame getCurrentFrame() {
 		return callStack.peek();
+	}
+	
+	public TinyObject[] getHeap() {
+		return heap;
+	}
+	
+	public int getHeapCounter() {
+		return heapCounter;
+	}
+	
+	public void incrementHeapCounter() {
+		heapCounter++;
+	}
+	
+	public HashMap<String, TinyClass> getClasses() {
+		return classes;
 	}
 	
 	public void load(String className) {
@@ -68,6 +84,12 @@ public class TinyVM {
 		tinyVm.loadList.add(className);
 		for(int i = 0; i < tinyVm.loadList.size(); i++) {
 			tinyVm.load(tinyVm.loadList.get(i));
+		}
+		
+		for(TinyClass tinyClass : tinyVm.classes.values()) {
+			ClassNameInfo superClassNameInfo = (ClassNameInfo)tinyClass.getConstantPool()[tinyClass.getSuperRef()];
+			StringInfo superClassName = (StringInfo)tinyVm.getCurrentFrame().getMethod().getTinyClass().getConstantPool()[superClassNameInfo.getClassName()];
+			tinyClass.setSuperClass(tinyVm.classes.get(superClassName.getBytesString()));
 		}
 	}
 }

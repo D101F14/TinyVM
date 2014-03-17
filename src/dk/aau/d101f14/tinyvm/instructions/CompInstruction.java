@@ -1,8 +1,5 @@
 package dk.aau.d101f14.tinyvm.instructions;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import dk.aau.d101f14.tinyvm.OpCode;
 import dk.aau.d101f14.tinyvm.Operator;
 import dk.aau.d101f14.tinyvm.TinyVM;
@@ -20,12 +17,8 @@ public class CompInstruction extends Instruction {
 	}
 	
 	@Override
-	public void read(InputStream stream) {
-		try {
-			operator = Operator.get((byte) stream.read());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public void read(byte[] code, int opCodeIndex) {
+		operator = Operator.get(code[opCodeIndex + 1]);
 	}
 
 	@Override
@@ -81,10 +74,6 @@ public class CompInstruction extends Instruction {
 			result = value1 >> value2;
 			tinyVm.getCurrentFrame().getOperandStack().pop();
 			break;
-		//case USHL:
-		//	result = value1 << value2;
-		//	tinyVm.getCurrentFrame().getOperandStack().pop();
-		//	break;
 		case USHR:
 			result = value1 >>> value2;
 			tinyVm.getCurrentFrame().getOperandStack().pop();
@@ -107,7 +96,7 @@ public class CompInstruction extends Instruction {
 		tinyVm.getCurrentFrame().getOperandStack().push(result);
 		
 		// Increment code pointer
-		tinyVm.getCurrentFrame().setCodePointer(tinyVm.getCurrentFrame().getCodePointer() + 1);
+		tinyVm.getCurrentFrame().incrementCodePointer(2);
 		
 		if(tinyVm.getDebug()) {
 			System.out.println("COMP\t" + getOperator());

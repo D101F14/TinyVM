@@ -1,8 +1,5 @@
 package dk.aau.d101f14.tinyvm.instructions;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import dk.aau.d101f14.tinyvm.OpCode;
 import dk.aau.d101f14.tinyvm.TinyVM;
 
@@ -10,8 +7,8 @@ public class PopInstruction extends Instruction {
 
 	byte number;
 	
-	public PopInstruction(TinyVM tinyVM) {
-		super(tinyVM, OpCode.POP);
+	public PopInstruction(TinyVM tinyVm) {
+		super(tinyVm, OpCode.POP);
 	}
 	
 	public byte getNumber() {
@@ -19,12 +16,8 @@ public class PopInstruction extends Instruction {
 	}
 	
 	@Override
-	public void read(InputStream stream) {
-		try {
-			number = (byte) stream.read();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public void read(byte[] code, int opCodeIndex) {
+		number = code[opCodeIndex + 1];
 	}
 
 	@Override
@@ -34,8 +27,7 @@ public class PopInstruction extends Instruction {
 			tinyVm.getCurrentFrame().getOperandStack().pop();
 		}
 		
-		// Increment code pointer
-		tinyVm.getCurrentFrame().setCodePointer(tinyVm.getCurrentFrame().getCodePointer() + 1);
+		tinyVm.getCurrentFrame().incrementCodePointer(2);
 		
 		if(tinyVm.getDebug()) {
 			System.out.println("POP\t" + getNumber());

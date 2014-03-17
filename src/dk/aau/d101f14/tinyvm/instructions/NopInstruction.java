@@ -1,24 +1,21 @@
 package dk.aau.d101f14.tinyvm.instructions;
 
-import java.io.InputStream;
-
 import dk.aau.d101f14.tinyvm.OpCode;
 import dk.aau.d101f14.tinyvm.TinyVM;
 
 public class NopInstruction extends Instruction {
-	public NopInstruction(TinyVM tinyVM) {
-		super(tinyVM, OpCode.NOP);
+	public NopInstruction(TinyVM tinyVm) {
+		super(tinyVm, OpCode.NOP);
 	}
 
 	@Override
-	public void read(InputStream stream) {
+	public void read(byte[] code, int opCodeIndex) {
 		// No operation!
 	}
 
 	@Override
 	public void execute() {
-		// Increment code pointer
-		tinyVm.getCurrentFrame().setCodePointer(tinyVm.getCurrentFrame().getCodePointer() + 1);
+		tinyVm.getCurrentFrame().incrementCodePointer(1);
 		
 		if(tinyVm.getDebug()) {
 			System.out.println("NOP");

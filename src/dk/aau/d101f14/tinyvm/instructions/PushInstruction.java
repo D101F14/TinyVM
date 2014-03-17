@@ -1,8 +1,5 @@
 package dk.aau.d101f14.tinyvm.instructions;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import dk.aau.d101f14.tinyvm.OpCode;
 import dk.aau.d101f14.tinyvm.TinyVM;
 import dk.aau.d101f14.tinyvm.Type;
@@ -31,15 +28,11 @@ public class PushInstruction extends Instruction {
 	}
 	
 	@Override
-	public void read(InputStream stream) {
-		try {
-			type = Type.get((byte) stream.read());
-			value = (byte) stream.read();
-			if(type == Type.INT) {
-				value2 = (byte) stream.read();
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
+	public void read(byte[] code, int opCodeIndex) {
+		type = Type.get(code[opCodeIndex + 1]);
+		value = code[opCodeIndex + 2];
+		if(type == Type.INT) {
+			value2 = code[opCodeIndex + 3];
 		}
 	}
 
@@ -49,7 +42,11 @@ public class PushInstruction extends Instruction {
 		tinyVm.getCurrentFrame().getOperandStack().push(getValue());
 				
 		//Increment code pointer
-		tinyVm.getCurrentFrame().setCodePointer(tinyVm.getCurrentFrame().getCodePointer() + 1);
+		if(type == Type.INT) {
+			tinyVm.getCurrentFrame().incrementCodePointer(4);
+		} else {
+			tinyVm.getCurrentFrame().incrementCodePointer(3);
+		}
 		
 		if(tinyVm.getDebug()) {
 			System.out.println("PUSH\t" + getType() + "\t" + getValue());

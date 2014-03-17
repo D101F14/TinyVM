@@ -2,16 +2,50 @@ package dk.aau.d101f14.tinyvm;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class TinyClass {
 	TinyVM tinyVm;
-	
+	TinyClass superClass;
 	CPInfo[] constantPool;
 	int thisRef;
 	Integer superRef;
 	int methodCount;
 	HashMap<String, TinyMethod> methods;
+	ArrayList<String> fields;
+	
+	public CPInfo[] getConstantPool() {
+		return constantPool;
+	}
+
+	public int getThisRef() {
+		return thisRef;
+	}
+
+	public Integer getSuperRef() {
+		return superRef;
+	}
+
+	public void setSuperClass(TinyClass superClass) {
+		this.superClass = superClass;
+	}
+	
+	public TinyClass getSuperClass() {
+		return superClass;
+	}
+
+	public int getMethodCount() {
+		return methodCount;
+	}
+
+	public HashMap<String, TinyMethod> getMethods() {
+		return methods;
+	}
+	
+	public ArrayList<String> getFields() {
+		return fields;
+	}
 	
 	public TinyClass(TinyVM tinyVm) {
 		this.tinyVm = tinyVm;
@@ -77,10 +111,10 @@ public class TinyClass {
 			methodCount = stream.read() << 8 | stream.read();
 			methods = new HashMap<String, TinyMethod>();
 			for(int i = 0; i < methodCount; i++) {
-				TinyMethod method = new TinyMethod();
+				TinyMethod method = new TinyMethod(this);
 				method.read(stream);
 				MethodDescriptorInfo methodDescriptor = (MethodDescriptorInfo)constantPool[method.methodDescriptor];
-				String methodName = ((StringInfo)constantPool[methodDescriptor.methodName]).getBytesString();
+				String methodName = ((StringInfo)constantPool[methodDescriptor.getMethodName()]).getBytesString();
 				methodName += "(";
 				for(int j = 0; j < methodDescriptor.argCount; j++) {
 					String argType = String.valueOf(((TypeInfo)constantPool[methodDescriptor.argTypes[j]]).type);
@@ -97,6 +131,11 @@ public class TinyClass {
 					String className = ((StringInfo)constantPool[((ClassNameInfo)cpInfo).className]).getBytesString();
 					if(!tinyVm.loadList.contains(className)) {
 						tinyVm.loadList.add(className);
+					}
+				} else if (cpInfo instanceof FieldDescriptorInfo) {
+					if(((FieldDescriptorInfo)cpInfo).getClassName() == thisRef) {
+						String fieldName = ((StringInfo)constantPool[((FieldDescriptorInfo)cpInfo).getFieldName()]).getBytesString();
+						fields.add(fieldName);
 					}
 				}
 			}
