@@ -23,14 +23,19 @@ public class ReturnInstruction extends Instruction {
 
 	@Override
 	public void execute() {
-		int value = tinyVm.getCurrentFrame().getOperandStack().pop();
-		
+		Integer value = null;
+		if(type != Type.VOID) {
+			value = tinyVm.getCurrentFrame().getOperandStack().pop();
+		}
 		tinyVm.getCallStack().pop();
 		
-		tinyVm.getCurrentFrame().getOperandStack().push(value);
-		
-		tinyVm.getCurrentFrame().incrementCodePointer(3);
-		
+		if(!tinyVm.getCallStack().isEmpty()) {
+			if(value != null) {
+				tinyVm.getCurrentFrame().getOperandStack().push(value);
+			}
+			
+			tinyVm.getCurrentFrame().incrementCodePointer(3);
+		}
 		if(tinyVm.getDebug()) {
 			System.out.println("RETURN\t" + getType());
 		}

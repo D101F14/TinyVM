@@ -21,7 +21,7 @@ public class TinyObject {
 			fields.put(fieldName, 0);
 		}
 		if(tinyClass.getSuperClass() != null) {
-			addFields(tinyClass);
+			addFields(tinyClass.getSuperClass());
 		}
 	}
 }

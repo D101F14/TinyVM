@@ -34,5 +34,9 @@ public class NewInstruction extends Instruction {
 		tinyVm.incrementHeapCounter();
 		
 		tinyVm.getCurrentFrame().incrementCodePointer(3);
+		
+		if(tinyVm.getDebug()) {
+			System.out.println("NEW\t" + getAddress());		
+		}
 	}
 }

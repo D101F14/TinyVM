@@ -1,6 +1,6 @@
 package dk.aau.d101f14.tinyvm.instructions;
 
-import dk.aau.d101f14.tinyvm.MethodDescriptorInfo;
+import dk.aau.d101f14.tinyvm.FieldDescriptorInfo;
 import dk.aau.d101f14.tinyvm.OpCode;
 import dk.aau.d101f14.tinyvm.StringInfo;
 import dk.aau.d101f14.tinyvm.TinyVM;
@@ -26,10 +26,13 @@ public class PutFieldInstruction extends Instruction {
 
 	@Override
 	public void execute() {
-		MethodDescriptorInfo methodDescriptor = (MethodDescriptorInfo)tinyVm.getCurrentFrame().getMethod().getTinyClass().getConstantPool()[getAddress()];
-		StringInfo fieldName = (StringInfo)tinyVm.getCurrentFrame().getMethod().getTinyClass().getConstantPool()[methodDescriptor.getClassName()];
+		FieldDescriptorInfo fieldDescriptor = (FieldDescriptorInfo)tinyVm.getCurrentFrame().getMethod().getTinyClass().getConstantPool()[getAddress()];
+		StringInfo fieldName = (StringInfo)tinyVm.getCurrentFrame().getMethod().getTinyClass().getConstantPool()[fieldDescriptor.getFieldName()];
 		tinyVm.getHeap()[tinyVm.getCurrentFrame().getOperandStack().pop()].getFields().put(fieldName.getBytesString(), tinyVm.getCurrentFrame().getOperandStack().pop());
 		tinyVm.getCurrentFrame().incrementCodePointer(3);
+		if(tinyVm.getDebug()) {
+			System.out.println("PUTFIELD\t" + getAddress());		
+		}
 	}
 
 }

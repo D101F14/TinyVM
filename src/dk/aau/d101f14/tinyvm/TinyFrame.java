@@ -44,8 +44,11 @@ public class TinyFrame {
 	
 	public void execute() {
 		Instruction instruction = null;
-		OpCode opCode = OpCode.get(method.code[codePointer]);
+		OpCode opCode = OpCode.get(method.getCode()[codePointer]);
 		switch(opCode) {
+		case DUP:
+			instruction = new DupInstruction(tinyVm);
+			break;
 		case COMP:
 			instruction = new CompInstruction(tinyVm);
 			break;
@@ -59,13 +62,13 @@ public class TinyFrame {
 			instruction = new IfInstruction(tinyVm);
 			break;
 		case INVOKEVIRTUAL:
-			//instruction = new InvokeVirtualInstruction(tinyVm);
+			instruction = new InvokeVirtualInstruction(tinyVm);
 			break;
 		case LOAD:
 			instruction = new LoadInstruction(tinyVm);
 			break;
 		case NEW:
-			//instruction = new NewInstruction(tinyVm);
+			instruction = new NewInstruction(tinyVm);
 			break;
 		case NOP:
 			instruction = new NopInstruction(tinyVm);
@@ -77,7 +80,7 @@ public class TinyFrame {
 			instruction = new PushInstruction(tinyVm);
 			break;
 		case PUTFIELD:
-			//instruction = new PutFieldInstruction(tinyVm);
+			instruction = new PutFieldInstruction(tinyVm);
 			break;
 		case RETURN:
 			instruction = new ReturnInstruction(tinyVm);
@@ -88,6 +91,7 @@ public class TinyFrame {
 		default:
 			break;
 		}
-		instruction.read(method.code, codePointer);
+		instruction.read(method.getCode(), codePointer);
+		instruction.execute();
 	}
 }

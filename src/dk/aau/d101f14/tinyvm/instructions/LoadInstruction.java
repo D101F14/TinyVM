@@ -31,6 +31,8 @@ public class LoadInstruction extends Instruction {
 
 	@Override
 	public void execute() {
+		tinyVm.getCurrentFrame().getOperandStack().push(tinyVm.getCurrentFrame().getLocalVariables()[getAddress()]);
+		
 		//Increment code pointer
 		tinyVm.getCurrentFrame().incrementCodePointer(4);
 		

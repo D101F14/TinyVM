@@ -31,6 +31,8 @@ public class StoreInstruction extends Instruction {
 	
 	@Override
 	public void execute() {
+		tinyVm.getCurrentFrame().getLocalVariables()[getAddress()] = tinyVm.getCurrentFrame().getOperandStack().pop();
+		
 		//Increment code pointer
 		tinyVm.getCurrentFrame().incrementCodePointer(4);
 		

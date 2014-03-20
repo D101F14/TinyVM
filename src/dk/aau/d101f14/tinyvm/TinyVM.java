@@ -19,8 +19,10 @@ public class TinyVM {
 	int heapCounter;
 	
 	public TinyVM() {
+		heap = new TinyObject[1024];
 		classes = new HashMap<String, TinyClass>();
 		loadList = new ArrayList<String>();
+		callStack = new Stack<TinyFrame>();
 		debug = false;
 	}
 	
@@ -87,9 +89,22 @@ public class TinyVM {
 		}
 		
 		for(TinyClass tinyClass : tinyVm.classes.values()) {
-			ClassNameInfo superClassNameInfo = (ClassNameInfo)tinyClass.getConstantPool()[tinyClass.getSuperRef()];
-			StringInfo superClassName = (StringInfo)tinyVm.getCurrentFrame().getMethod().getTinyClass().getConstantPool()[superClassNameInfo.getClassName()];
-			tinyClass.setSuperClass(tinyVm.classes.get(superClassName.getBytesString()));
+			if(tinyClass.getSuperRef() != null) {
+				ClassNameInfo superClassNameInfo = (ClassNameInfo)tinyClass.getConstantPool()[tinyClass.getSuperRef()];
+				StringInfo superClassName = (StringInfo)tinyClass.getConstantPool()[superClassNameInfo.getClassName()];
+				tinyClass.setSuperClass(tinyVm.classes.get(superClassName.getBytesString()));
+			}
+		}
+		
+		tinyVm.getHeap()[tinyVm.getHeapCounter()] = new TinyObject(tinyVm.getClasses().get(className));
+		tinyVm.incrementHeapCounter();
+		
+		TinyMethod mainMethod = tinyVm.getClasses().get(className).getMethods().get("main()");
+		int[] localVariables = new int[mainMethod.getMaxLocals()];
+		tinyVm.getCallStack().push(new TinyFrame(tinyVm, localVariables, mainMethod));
+		
+		while(!tinyVm.getCallStack().isEmpty()) {
+			tinyVm.getCurrentFrame().execute();
 		}
 	}
 }

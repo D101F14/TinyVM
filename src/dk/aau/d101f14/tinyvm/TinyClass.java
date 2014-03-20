@@ -47,8 +47,19 @@ public class TinyClass {
 		return fields;
 	}
 	
+	public TinyMethod methodLookup(TinyClass tinyClass, String methodName) {
+		if(tinyClass.getMethods().containsKey(methodName)) {
+			return tinyClass.getMethods().get(methodName);
+		} else if(tinyClass.getSuperClass() != null) {
+			return methodLookup(tinyClass.getSuperClass(), methodName);
+		}
+		return null;
+	}
+	
 	public TinyClass(TinyVM tinyVm) {
 		this.tinyVm = tinyVm;
+		methods = new HashMap<String, TinyMethod>();
+		fields = new ArrayList<String>();
 	}
 	
 	public void read(InputStream stream) {
@@ -109,7 +120,6 @@ public class TinyClass {
 				superRef = null;
 			}
 			methodCount = stream.read() << 8 | stream.read();
-			methods = new HashMap<String, TinyMethod>();
 			for(int i = 0; i < methodCount; i++) {
 				TinyMethod method = new TinyMethod(this);
 				method.read(stream);
@@ -117,7 +127,13 @@ public class TinyClass {
 				String methodName = ((StringInfo)constantPool[methodDescriptor.getMethodName()]).getBytesString();
 				methodName += "(";
 				for(int j = 0; j < methodDescriptor.argCount; j++) {
-					String argType = String.valueOf(((TypeInfo)constantPool[methodDescriptor.argTypes[j]]).type);
+					TypeInfo typeInfo = (TypeInfo)constantPool[methodDescriptor.argTypes[j]];
+					String argType = String.valueOf(typeInfo.getType());
+					if(argType == "l") {
+						argType += "(";
+						argType += ((StringInfo)constantPool[typeInfo.getClassName()]).getBytesString();
+						argType += ")";
+					}
 					methodName += argType;
 					if(j < methodDescriptor.argCount) {
 						methodName += ", ";

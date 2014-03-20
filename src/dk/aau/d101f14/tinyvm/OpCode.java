@@ -16,7 +16,8 @@ public enum OpCode {
 	GETFIELD((byte)9),
 	PUTFIELD((byte)10),
 	INVOKEVIRTUAL((byte)11),
-	RETURN((byte)12);
+	RETURN((byte)12),
+	DUP((byte)13);
 	
 	private final byte opcode;
 	OpCode(byte opcode) {

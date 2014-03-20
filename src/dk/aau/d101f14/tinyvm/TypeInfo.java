@@ -10,9 +10,15 @@ public class TypeInfo extends CPInfo {
 		this.className = className;
 	}
 	
+	public byte getType() {
+		return type;
+	}
+	
+	public int getClassName() {
+		return className;
+	}
+	
 	public TypeInfo(byte type) {
 		this(type, -1);
 	}
-	
-
 }
