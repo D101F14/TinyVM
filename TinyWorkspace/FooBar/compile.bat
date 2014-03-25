@@ -1,0 +1,1 @@
+FOR %%c in (.\src\*.*) DO java -jar encoder.jar src/%%~nc.json > bin/%%~nc.tclass

@@ -83,6 +83,10 @@ public class TinyVM {
 		tinyVm.rootDirectory = args[0].substring(0, args[0].lastIndexOf("/"));
 		tinyVm.setDebug(true);
 		String className = args[0].substring(args[0].lastIndexOf("/") + 1);
+		tinyVm.loadList.add("Exception");
+		tinyVm.loadList.add("OutOfMemoryException");
+		tinyVm.loadList.add("StackOverflowException");
+		tinyVm.loadList.add("DivisionByZeroException");
 		tinyVm.loadList.add(className);
 		for(int i = 0; i < tinyVm.loadList.size(); i++) {
 			tinyVm.load(tinyVm.loadList.get(i));
@@ -97,6 +101,12 @@ public class TinyVM {
 		}
 		
 		tinyVm.getHeap()[tinyVm.getHeapCounter()] = new TinyObject(tinyVm.getClasses().get(className));
+		tinyVm.incrementHeapCounter();
+		tinyVm.getHeap()[tinyVm.getHeapCounter()] = new TinyObject(tinyVm.getClasses().get("OutOfMemoryException"));
+		tinyVm.incrementHeapCounter();
+		tinyVm.getHeap()[tinyVm.getHeapCounter()] = new TinyObject(tinyVm.getClasses().get("StackOverflowException"));
+		tinyVm.incrementHeapCounter();
+		tinyVm.getHeap()[tinyVm.getHeapCounter()] = new TinyObject(tinyVm.getClasses().get("DivisionByZeroException"));
 		tinyVm.incrementHeapCounter();
 		
 		TinyMethod mainMethod = tinyVm.getClasses().get(className).getMethods().get("main()");
