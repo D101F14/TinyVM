@@ -138,7 +138,6 @@ public class Encoder {
 							break;
 						case "THROW":
 							System.out.write(OpCode.THROW.getByte());
-							writeInt(Short.parseShort(instructionString[1]));
 							break;
 					}
 				}

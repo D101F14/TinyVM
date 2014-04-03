@@ -2,6 +2,7 @@ package dk.aau.d101f14.tinyvm.instructions;
 
 import dk.aau.d101f14.tinyvm.OpCode;
 import dk.aau.d101f14.tinyvm.Operator;
+import dk.aau.d101f14.tinyvm.TinyObject;
 import dk.aau.d101f14.tinyvm.TinyVM;
 
 public class CompInstruction extends Instruction {
@@ -59,12 +60,24 @@ public class CompInstruction extends Instruction {
 			tinyVm.getCurrentFrame().getOperandStack().pop();
 			break;
 		case DIV:
-			result = value1 / value2;
-			tinyVm.getCurrentFrame().getOperandStack().pop();
+			if(value2 != 0) {
+				result = value1 / value2;
+				tinyVm.getCurrentFrame().getOperandStack().pop();
+			} else {
+				tinyVm.getHeap()[tinyVm.getHeapCounter()] = new TinyObject(tinyVm.getClasses().get("DivisionByZeroException"));
+				tinyVm.incrementHeapCounter();
+				tinyVm.throwException(tinyVm.getHeapCounter() - 1);
+			}
 			break;
 		case MOD:
-			result = value1 % value2;
-			tinyVm.getCurrentFrame().getOperandStack().pop();
+			if(value2 != 0) {
+				result = value1 % value2;
+				tinyVm.getCurrentFrame().getOperandStack().pop();
+			} else {
+				tinyVm.getHeap()[tinyVm.getHeapCounter()] = new TinyObject(tinyVm.getClasses().get("DivisionByZeroException"));
+				tinyVm.incrementHeapCounter();
+				tinyVm.throwException(tinyVm.getHeapCounter() - 1);
+			}
 			break;
 		case SHL:
 			result = value1 << value2;

@@ -47,7 +47,7 @@ public class TinyClass {
 		return fields;
 	}
 	
-	public TinyMethod methodLookup(TinyClass tinyClass, String methodName) {
+	public static TinyMethod methodLookup(TinyClass tinyClass, String methodName) {
 		if(tinyClass.getMethods().containsKey(methodName)) {
 			return tinyClass.getMethods().get(methodName);
 		} else if(tinyClass.getSuperClass() != null) {

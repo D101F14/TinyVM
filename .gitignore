@@ -2,3 +2,4 @@
 /bin
 /TinyWorkspace/*.jar
 /TinyWorkspace/FooBar/bin
+TinyWorkspace/FooBar/encoder.jar

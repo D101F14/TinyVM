@@ -3,6 +3,7 @@ package dk.aau.d101f14.tinyvm.instructions;
 import dk.aau.d101f14.tinyvm.MethodDescriptorInfo;
 import dk.aau.d101f14.tinyvm.OpCode;
 import dk.aau.d101f14.tinyvm.StringInfo;
+import dk.aau.d101f14.tinyvm.TinyClass;
 import dk.aau.d101f14.tinyvm.TinyFrame;
 import dk.aau.d101f14.tinyvm.TinyMethod;
 import dk.aau.d101f14.tinyvm.TinyVM;
@@ -51,7 +52,7 @@ public class InvokeVirtualInstruction extends Instruction {
 		}
 		methodName += ")";
 		
-		TinyMethod method = tinyVm.getClasses().get(className.getBytesString()).getMethods().get(methodName);
+		TinyMethod method = TinyClass.methodLookup(tinyVm.getClasses().get(className.getBytesString()), methodName);
 		int[] localVariables = new int[method.getMaxLocals()];
 		for(int i = 0; i < localVariables.length; i++) {
 			localVariables[i] = tinyVm.getCurrentFrame().getOperandStack().pop();

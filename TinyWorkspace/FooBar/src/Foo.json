@@ -114,7 +114,7 @@
         	"method_descriptor": 13,
         	"max_stack": 2,
         	"max_locals": 3,
-        	"code_length": 35,
+        	"code_length": 41,
         	"code": [
         		"new 0",
         		"dup",
@@ -123,8 +123,10 @@
         		"push INT 5",
         		"load REF 1",
         		"putfield 4",
+        		"push INT 0",
         		"load REF 1",
         		"invokevirtual 7",
+        		"comp DIV",
         		"store INT 2",
         		"return VOID"
         	],

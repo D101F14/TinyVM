@@ -8,7 +8,7 @@
         {
             "tag": 4,
             "length": 22,
-            "bytes": "StackOverflowException"
+            "bytes": "NullReferenceException"
         },
         {
             "tag": 3,

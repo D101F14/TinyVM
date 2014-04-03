@@ -88,6 +88,9 @@ public class TinyFrame {
 		case STORE:
 			instruction = new StoreInstruction(tinyVm);
 			break;
+		case THROW:
+			instruction = new ThrowInstruction(tinyVm);
+			break;
 		default:
 			break;
 		}
