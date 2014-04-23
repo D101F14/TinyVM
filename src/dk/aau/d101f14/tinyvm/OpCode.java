@@ -18,7 +18,8 @@ public enum OpCode {
 	INVOKEVIRTUAL((byte)11),
 	RETURN((byte)12),
 	DUP((byte)13),
-	THROW((byte)14);
+	THROW((byte)14),
+	INVOKENATIVE((byte)15);
 	
 	private final byte opcode;
 	OpCode(byte opcode) {

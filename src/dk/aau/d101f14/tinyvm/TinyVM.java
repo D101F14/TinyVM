@@ -4,6 +4,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
@@ -13,10 +15,11 @@ public class TinyVM {
 	
 	HashMap<String, TinyClass> classes;
 	ArrayList<String> loadList;
-	String rootDirectory;
+	Path rootDirectory;
 	Stack<TinyFrame> callStack;
 	TinyObject[] heap;
 	int heapCounter;
+	TinyNativeInterface tni;
 	
 	public TinyVM() {
 		heap = new TinyObject[1024];
@@ -24,6 +27,7 @@ public class TinyVM {
 		loadList = new ArrayList<String>();
 		callStack = new Stack<TinyFrame>();
 		debug = false;
+		tni = new TinyNativeInterface();
 	}
 	
 	public void setDebug(boolean debug) {
@@ -32,6 +36,10 @@ public class TinyVM {
 	
 	public boolean getDebug() {
 		return debug;
+	}
+	
+	public Path getRootDirectory() {
+		return rootDirectory;
 	}
 	
 	public Stack<TinyFrame> getCallStack() {
@@ -48,6 +56,10 @@ public class TinyVM {
 	
 	public int getHeapCounter() {
 		return heapCounter;
+	}
+	
+	public TinyNativeInterface getNativeInterface() {
+		return tni;
 	}
 	
 	public void incrementHeapCounter() {
@@ -112,9 +124,10 @@ public class TinyVM {
 	
 	public static void main(String[] args) {
 		TinyVM tinyVm = new TinyVM();
-		tinyVm.rootDirectory = args[0].substring(0, args[0].lastIndexOf("/"));
+		tinyVm.rootDirectory = Paths.get(args[0]).toAbsolutePath().getParent();
 		tinyVm.setDebug(true);
-		String className = args[0].substring(args[0].lastIndexOf("/") + 1);
+		
+		String className = Paths.get(args[0]).getFileName().toString();
 		tinyVm.loadList.add("Exception");
 		tinyVm.loadList.add("OutOfMemoryException");
 		tinyVm.loadList.add("NullReferenceException");
@@ -142,5 +155,7 @@ public class TinyVM {
 		while(!tinyVm.getCallStack().isEmpty()) {
 			tinyVm.getCurrentFrame().execute();
 		}
+		
+		//tinyVm.getNativeInterface().execute("D:/Git/TinyVM/TinyWorkspace/FooBar/bin/native/print.dll", "printint", new int[]{212});
 	}
 }

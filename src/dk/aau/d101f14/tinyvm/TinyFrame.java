@@ -64,6 +64,9 @@ public class TinyFrame {
 		case INVOKEVIRTUAL:
 			instruction = new InvokeVirtualInstruction(tinyVm);
 			break;
+		case INVOKENATIVE:
+			instruction = new InvokeNativeInstruction(tinyVm);
+			break;
 		case LOAD:
 			instruction = new LoadInstruction(tinyVm);
 			break;

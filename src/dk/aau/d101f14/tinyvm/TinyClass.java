@@ -112,6 +112,18 @@ public class TinyClass {
 						constantPool[i] = new TypeInfo(type);
 						break;
 					}
+					case 6: {
+						int libraryPath = stream.read() << 8 | stream.read();
+						int methodName = stream.read() << 8 | stream.read();
+						int argCount = stream.read() << 8 | stream.read();
+						int[] argTypes = new int[argCount];
+						for(int j = 0; j < argCount; j++) {
+							argTypes[j] = stream.read() << 8 | stream.read();
+						}
+						int retType = stream.read() << 8 | stream.read();
+						constantPool[i] = new NativeMethodDescriptorInfo(libraryPath, methodName, argCount, argTypes, retType);
+						break;
+					}
 				}
 			}
 			thisRef = stream.read() << 8 | stream.read();

@@ -46,6 +46,9 @@ public class Encoder {
 						writeInt(cpInfo.get("class_name").getAsInt());
 						writeInt(cpInfo.get("method_name").getAsInt());
 						writeInt(cpInfo.get("arg_count").getAsInt());
+						for(int j = 0; j < cpInfo.get("arg_count").getAsInt(); j++) {
+							writeInt(cpInfo.get("arg_types").getAsJsonArray().get(j).getAsInt());
+						}
 						writeInt(cpInfo.get("ret_type").getAsInt());
 						break;
 					case 4:
@@ -54,6 +57,15 @@ public class Encoder {
 						break;
 					case 5:
 						System.out.print(cpInfo.get("type").getAsString());
+						break;
+					case 6:
+						writeInt(cpInfo.get("library_path").getAsInt());
+						writeInt(cpInfo.get("method_name").getAsInt());
+						writeInt(cpInfo.get("arg_count").getAsInt());
+						for(int j = 0; j < cpInfo.get("arg_count").getAsInt(); j++) {
+							writeInt(cpInfo.get("arg_types").getAsJsonArray().get(j).getAsInt());
+						}
+						writeInt(cpInfo.get("ret_type").getAsInt());
 						break;
 				}
 			}
@@ -127,6 +139,10 @@ public class Encoder {
 							break;
 						case "INVOKEVIRTUAL":
 							System.out.write(OpCode.INVOKEVIRTUAL.getByte());
+							writeInt(Short.parseShort(instructionString[1]));
+							break;
+						case "INVOKENATIVE":
+							System.out.write(OpCode.INVOKENATIVE.getByte());
 							writeInt(Short.parseShort(instructionString[1]));
 							break;
 						case "RETURN":

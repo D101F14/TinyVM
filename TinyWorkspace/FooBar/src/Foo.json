@@ -1,85 +1,103 @@
 {
-    "cp_count": 15,
+    "cp_count": 18,
     "constant_pool": [
-        {
+        { // 0
             "tag": 1,
             "class_name": 1
-        },
-        {
+        }, 
+        { // 1
             "tag": 4,
             "length": 3,
             "bytes": "Foo"
         },
-        {
+        { // 2
             "tag": 1,
             "class_name": 3
-        },
-        {
+        }, 
+        { // 3
             "tag": 4,
             "length": 6,
             "bytes": "Object"
-        },
-        {
+        }, 
+        { // 4
             "tag": 2,
             "class_name": 1,
             "field_name": 5,
             "field_type": 6
         },
-        {
+        { // 5
             "tag": 4,
             "length": 3,
             "bytes": "foo"
         },
-        {
+        { // 6
             "tag": 5,
             "type": "i"
         },
-        {
+        { // 7
             "tag": 3,
             "class_name": 1,
             "method_name": 8,
             "arg_count": 0,
             "ret_type": 6
         },
-        {
+        { // 8
             "tag": 4,
             "length": 6,
             "bytes": "getFoo"
         },
-        {
+        { // 9
             "tag": 3,
             "class_name": 3,
             "method_name": 10,
             "arg_count": 0,
             "ret_type": 11
         },
-        {
+        { // 10
             "tag": 4,
             "length": 6,
             "bytes": "<init>"
         },
-        {
+        { // 11
             "tag": 5,
             "type": "v"
         },
-        {
+        { // 12
             "tag": 3,
             "class_name": 1,
             "method_name": 10,
             "arg_count": 0,
             "ret_type": 11
         },
-        {
+        { // 13
         	"tag": 3,
         	"class_name": 1,
         	"method_name": 14,
         	"arg_count": 0,
         	"ret_type": 11
         },
-        {
+        { // 14
         	"tag": 4,
         	"length": 4,
         	"bytes": "main"
+        },
+        { // 15
+        	"tag": 4,
+        	"length": 16,
+        	"bytes": "native/print.dll"
+        },
+        { // 16
+        	"tag": 4,
+        	"length": 8,
+        	"bytes": "printint"
+        },
+        { // 17
+        	"tag": 6,
+        	"library_path": 15,
+        	"method_name": 16,
+        	"arg_count": 1,
+        	"arg_types": [6],
+        	"ret_type": 6
         }
     ],
     "this": 0,
@@ -112,22 +130,15 @@
         },
         {
         	"method_descriptor": 13,
-        	"max_stack": 2,
-        	"max_locals": 3,
-        	"code_length": 41,
+        	"max_stack": 1,
+        	"max_locals": 1,
+        	"code_length": 19,
         	"code": [
-        		"new 0",
-        		"dup",
-        		"invokevirtual 12",
-        		"store REF 1",
         		"push INT 5",
-        		"load REF 1",
-        		"putfield 4",
-        		"push INT 0",
-        		"load REF 1",
-        		"invokevirtual 7",
-        		"comp DIV",
-        		"store INT 2",
+        		"invokenative 17",
+        		"invokenative 17",
+        		"push INT 7",
+        		"invokenative 17",
         		"return VOID"
         	],
         	"handler_count": 0
