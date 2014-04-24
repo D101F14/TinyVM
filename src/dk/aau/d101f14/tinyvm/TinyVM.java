@@ -155,7 +155,5 @@ public class TinyVM {
 		while(!tinyVm.getCallStack().isEmpty()) {
 			tinyVm.getCurrentFrame().execute();
 		}
-		
-		//tinyVm.getNativeInterface().execute("D:/Git/TinyVM/TinyWorkspace/FooBar/bin/native/print.dll", "printint", new int[]{212});
 	}
 }

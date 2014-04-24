@@ -16,6 +16,7 @@ public class NopInstruction extends Instruction {
 	@Override
 	public void execute() {
 		tinyVm.getCurrentFrame().incrementCodePointer(1);
+		tinyVm.getCurrentFrame().incrementCodePointerR(1);
 		
 		if(tinyVm.getDebug()) {
 			System.out.println("NOP");

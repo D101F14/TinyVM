@@ -26,6 +26,7 @@ public class GotoInstruction extends Instruction {
 	public void execute() {
 		// Set code pointer to address.
 		tinyVm.getCurrentFrame().setCodePointer(getAddress());
+		tinyVm.getCurrentFrame().setCodePointerR(getAddress());
 		
 		if(tinyVm.getDebug()) {
 			System.out.println("GOTO\t" + getAddress());

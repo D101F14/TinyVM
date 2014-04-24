@@ -31,9 +31,12 @@ public class NewInstruction extends Instruction {
 		tinyVm.getHeap()[tinyVm.getHeapCounter()] = new TinyObject(tinyVm.getClasses().get(className.getBytesString()));
 		
 		tinyVm.getCurrentFrame().getOperandStack().push(tinyVm.getHeapCounter());
+		tinyVm.getCurrentFrame().getOperandStackR().push(tinyVm.getHeapCounter());
+		
 		tinyVm.incrementHeapCounter();
 		
 		tinyVm.getCurrentFrame().incrementCodePointer(3);
+		tinyVm.getCurrentFrame().incrementCodePointerR(3);
 		
 		if(tinyVm.getDebug()) {
 			System.out.println("NEW\t" + getAddress());		

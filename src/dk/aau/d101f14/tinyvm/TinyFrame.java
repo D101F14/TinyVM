@@ -6,16 +6,30 @@ import dk.aau.d101f14.tinyvm.instructions.*;
 
 public class TinyFrame {
 	TinyVM tinyVm;
-	int[] localVariables;
 	TinyMethod method;
+	
+	
+	int[] localVariables;
 	Stack<Integer> operandStack;
 	int codePointer;
 	
+	// Redundant elements
+	int[] localVariablesR;
+	Stack<Integer> operandStackR;
+	int codePointerR;
+	
 	public TinyFrame(TinyVM tinyVm, int[] localVariables, TinyMethod method) {
 		this.tinyVm = tinyVm;
-		this.localVariables = localVariables;
 		this.method = method;
+		
+		this.localVariables = localVariables;
 		operandStack = new Stack<Integer>();
+		codePointer = 0;
+		
+		localVariablesR = localVariables;
+		operandStackR = new Stack<Integer>();
+		codePointerR = 0;
+		
 	}
 	
 	public int[] getLocalVariables() {
@@ -41,6 +55,27 @@ public class TinyFrame {
 	public void setCodePointer(int codePointer) {
 		this.codePointer = codePointer;
 	}
+	
+	public int getCodePointerR() {
+		return codePointerR;
+	}
+
+	public void setCodePointerR(int codePointerR) {
+		this.codePointerR = codePointerR;
+	}
+
+	public void incrementCodePointerR(int i) {
+		this.codePointerR += i;
+	}
+	
+	public int[] getLocalVariablesR() {
+		return localVariablesR;
+	}
+
+	public Stack<Integer> getOperandStackR() {
+		return operandStackR;
+	}
+
 	
 	public void execute() {
 		Instruction instruction = null;

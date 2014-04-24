@@ -32,9 +32,11 @@ public class StoreInstruction extends Instruction {
 	@Override
 	public void execute() {
 		tinyVm.getCurrentFrame().getLocalVariables()[getAddress()] = tinyVm.getCurrentFrame().getOperandStack().pop();
+		tinyVm.getCurrentFrame().getLocalVariablesR()[getAddress()] = tinyVm.getCurrentFrame().getOperandStackR().pop();
 		
 		//Increment code pointer
 		tinyVm.getCurrentFrame().incrementCodePointer(4);
+		tinyVm.getCurrentFrame().incrementCodePointerR(4);
 		
 		if(tinyVm.getDebug()) {
 			System.out.println("STORE\t" + getType() + "\t" + getAddress());

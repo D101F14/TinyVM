@@ -40,12 +40,15 @@ public class PushInstruction extends Instruction {
 	public void execute() {
 		//Push value to operand stack
 		tinyVm.getCurrentFrame().getOperandStack().push(getValue());
+		tinyVm.getCurrentFrame().getOperandStackR().push(getValue());
 				
 		//Increment code pointer
 		if(type == Type.INT) {
 			tinyVm.getCurrentFrame().incrementCodePointer(4);
+			tinyVm.getCurrentFrame().incrementCodePointerR(4);
 		} else {
 			tinyVm.getCurrentFrame().incrementCodePointer(3);
+			tinyVm.getCurrentFrame().incrementCodePointerR(3);
 		}
 		
 		if(tinyVm.getDebug()) {

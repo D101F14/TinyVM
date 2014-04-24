@@ -31,7 +31,8 @@ public class PutFieldInstruction extends Instruction {
 		StringInfo fieldName = (StringInfo)tinyVm.getCurrentFrame().getMethod().getTinyClass().getConstantPool()[fieldDescriptor.getFieldName()];
 		
 		Integer objectRef = tinyVm.getCurrentFrame().getOperandStack().pop();
-		if(objectRef != null) {
+
+		if(objectRef > 0) {
 			tinyVm.getHeap()[objectRef].getFields().put(fieldName.getBytesString(), tinyVm.getCurrentFrame().getOperandStack().pop());
 			tinyVm.getCurrentFrame().incrementCodePointer(3);
 			if(tinyVm.getDebug()) {

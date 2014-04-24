@@ -16,8 +16,10 @@ public class DupInstruction extends Instruction {
 	@Override
 	public void execute() {
 		tinyVm.getCurrentFrame().getOperandStack().push(tinyVm.getCurrentFrame().getOperandStack().peek());
+		tinyVm.getCurrentFrame().getOperandStackR().push(tinyVm.getCurrentFrame().getOperandStackR().peek());
 		
 		tinyVm.getCurrentFrame().incrementCodePointer(1);
+		tinyVm.getCurrentFrame().incrementCodePointerR(1);
 		
 		if(tinyVm.getDebug()) {
 			System.out.println("DUP");		

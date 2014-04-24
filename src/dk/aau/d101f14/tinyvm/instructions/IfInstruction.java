@@ -32,31 +32,42 @@ public class IfInstruction extends Instruction {
 	@Override
 	public void execute() {
 		boolean expression = false;
+		boolean expressionR = false;
+		
 		int value1 = tinyVm.getCurrentFrame().getOperandStack().pop();
 		int value2 = tinyVm.getCurrentFrame().getOperandStack().pop();
+		
+		int value1R = tinyVm.getCurrentFrame().getOperandStackR().pop();
+		int value2R = tinyVm.getCurrentFrame().getOperandStackR().pop();
+		
 		switch(operator) {
 		case EQUALS:
 			expression = value1 == value2;
+			expressionR = value1R == value2R;
 			break;
 		case NEQUALS:
 			expression = value1 != value2;
+			expressionR = value1R != value2R;
 			break;
 		case GT:
 			expression = value1 > value2;
+			expressionR = value1R > value2R;
 			break;
 		case LT:
 			expression = value1 < value2;
+			expressionR = value1R < value2R;
 			break;
 		case AND:
 			expression = (value1 != 0) && (value2 != 0);
+			expressionR = (value1R != 0) && (value2R != 0);
 			break;
 		case OR:
 			expression = (value1 != 0) || (value2 != 0);
+			expressionR = (value1R != 0) || (value2R != 0);
 			break;
 		case XOR:
 			expression = (value1 != 0) ^ (value2 != 0);
-			break;
-		default:
+			expressionR = (value1R != 0) ^ (value2R != 0);
 			break;
 		}
 		
@@ -64,6 +75,12 @@ public class IfInstruction extends Instruction {
 			tinyVm.getCurrentFrame().setCodePointer(getAddress());
 		} else {
 			tinyVm.getCurrentFrame().incrementCodePointer(4);
+		}
+		
+		if(expressionR) {
+			tinyVm.getCurrentFrame().setCodePointerR(getAddress());
+		} else {
+			tinyVm.getCurrentFrame().incrementCodePointerR(4);
 		}
 		
 		if(tinyVm.getDebug()) {

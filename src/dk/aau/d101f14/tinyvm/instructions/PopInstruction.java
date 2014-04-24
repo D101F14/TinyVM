@@ -25,9 +25,11 @@ public class PopInstruction extends Instruction {
 		// Pop n elements from stack
 		for(int i = 0; i < number; i++) {
 			tinyVm.getCurrentFrame().getOperandStack().pop();
+			tinyVm.getCurrentFrame().getOperandStackR().pop();
 		}
 		
 		tinyVm.getCurrentFrame().incrementCodePointer(2);
+		tinyVm.getCurrentFrame().incrementCodePointerR(2);
 		
 		if(tinyVm.getDebug()) {
 			System.out.println("POP\t" + getNumber());

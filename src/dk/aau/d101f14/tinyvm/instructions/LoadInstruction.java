@@ -32,9 +32,11 @@ public class LoadInstruction extends Instruction {
 	@Override
 	public void execute() {
 		tinyVm.getCurrentFrame().getOperandStack().push(tinyVm.getCurrentFrame().getLocalVariables()[getAddress()]);
+		tinyVm.getCurrentFrame().getOperandStackR().push(tinyVm.getCurrentFrame().getLocalVariablesR()[getAddress()]);
 		
 		//Increment code pointer
 		tinyVm.getCurrentFrame().incrementCodePointer(4);
+		tinyVm.getCurrentFrame().incrementCodePointerR(4);
 		
 		if(tinyVm.getDebug()) {
 			System.out.println("LOAD\t" + getType() + "\t" + getAddress());		
