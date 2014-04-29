@@ -1,5 +1,7 @@
 package dk.aau.d101f14.tinyvm.instructions;
 
+import java.util.Stack;
+
 import dk.aau.d101f14.tinyvm.ClassNameInfo;
 import dk.aau.d101f14.tinyvm.OpCode;
 import dk.aau.d101f14.tinyvm.StringInfo;
@@ -26,20 +28,29 @@ public class NewInstruction extends Instruction {
 
 	@Override
 	public void execute() {
-		ClassNameInfo classNameInfo = (ClassNameInfo)tinyVm.getCurrentFrame().getMethod().getTinyClass().getConstantPool()[getAddress()];
-		StringInfo className = (StringInfo)tinyVm.getCurrentFrame().getMethod().getTinyClass().getConstantPool()[classNameInfo.getClassName()];
-		tinyVm.getHeap()[tinyVm.getHeapCounter()] = new TinyObject(tinyVm.getClasses().get(className.getBytesString()));
-		
-		tinyVm.getCurrentFrame().getOperandStack().push(tinyVm.getHeapCounter());
-		tinyVm.getCurrentFrame().getOperandStackR().push(tinyVm.getHeapCounter());
-		
-		tinyVm.incrementHeapCounter();
-		
-		tinyVm.getCurrentFrame().incrementCodePointer(3);
-		tinyVm.getCurrentFrame().incrementCodePointerR(3);
-		
-		if(tinyVm.getDebug()) {
-			System.out.println("NEW\t" + getAddress());		
+		if(tinyVm.getCurrentFrame().checkFrame()) {
+			tinyVm.getCurrentFrame().commitLocalHeap();
+			tinyVm.getCurrentFrame().getCheckpoint().update(tinyVm.getCurrentFrame().getLocalVariables().clone(), 
+					(Stack<Integer>)tinyVm.getCurrentFrame().getOperandStack().clone(), 
+					tinyVm.getCurrentFrame().getCodePointer());
+			
+			ClassNameInfo classNameInfo = (ClassNameInfo)tinyVm.getCurrentFrame().getMethod().getTinyClass().getConstantPool()[getAddress()];
+			StringInfo className = (StringInfo)tinyVm.getCurrentFrame().getMethod().getTinyClass().getConstantPool()[classNameInfo.getClassName()];
+			tinyVm.getHeap()[tinyVm.getHeapCounter()] = new TinyObject(tinyVm.getClasses().get(className.getBytesString()));
+			
+			tinyVm.getCurrentFrame().getOperandStack().push(tinyVm.getHeapCounter());
+			tinyVm.getCurrentFrame().getOperandStackR().push(tinyVm.getHeapCounter());
+			
+			tinyVm.incrementHeapCounter();
+			
+			tinyVm.getCurrentFrame().incrementCodePointer(3);
+			tinyVm.getCurrentFrame().incrementCodePointerR(3);
+			
+			if(tinyVm.getDebug()) {
+				System.out.println("NEW\t" + getAddress());		
+			} 
+		} else {
+			tinyVm.getCurrentFrame().rollback();
 		}
 	}
 }

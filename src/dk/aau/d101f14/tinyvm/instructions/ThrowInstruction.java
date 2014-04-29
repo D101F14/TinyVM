@@ -15,7 +15,16 @@ public class ThrowInstruction extends Instruction {
 	
 	@Override
 	public void execute() {
-		tinyVm.throwException(tinyVm.getCurrentFrame().getOperandStack().pop());
+		if(tinyVm.getCurrentFrame().checkFrame()) {
+		   tinyVm.getCurrentFrame().commitLocalHeap(); 
+		   tinyVm.throwException(tinyVm.getCurrentFrame().getOperandStack().pop());
+		} else {
+			tinyVm.getCurrentFrame().rollback();
+		}
+		
+		if(tinyVm.getDebug()) {
+			System.out.println("THROW");
+		}
 	}
 
 }

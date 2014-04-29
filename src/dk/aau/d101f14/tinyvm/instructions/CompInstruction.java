@@ -88,23 +88,39 @@ public class CompInstruction extends Instruction {
 			tinyVm.getCurrentFrame().getOperandStackR().pop();
 			break;
 		case DIV:
-			if(value2 != 0) {
+			if(value2 != 0 && value2R != 0) {
 				result = value1 / value2;
+				resultR = value1R / value2R;
+				
 				tinyVm.getCurrentFrame().getOperandStack().pop();
+				tinyVm.getCurrentFrame().getOperandStackR().pop();
 			} else {
-				tinyVm.getHeap()[tinyVm.getHeapCounter()] = new TinyObject(tinyVm.getClasses().get("DivisionByZeroException"));
-				tinyVm.incrementHeapCounter();
-				tinyVm.throwException(tinyVm.getHeapCounter() - 1);
+				if(tinyVm.getCurrentFrame().checkFrame()) {
+					tinyVm.getCurrentFrame().commitLocalHeap();
+					tinyVm.getHeap()[tinyVm.getHeapCounter()] = new TinyObject(tinyVm.getClasses().get("DivisionByZeroException"));
+					tinyVm.incrementHeapCounter();
+					tinyVm.throwException(tinyVm.getHeapCounter() - 1);
+				} else {
+					tinyVm.getCurrentFrame().rollback();
+				}
 			}
 			break;
 		case MOD:
-			if(value2 != 0) {
+			if(value2 != 0 && value2R != 0) {
 				result = value1 % value2;
+				resultR = value1R % value2R;
+				
 				tinyVm.getCurrentFrame().getOperandStack().pop();
+				tinyVm.getCurrentFrame().getOperandStackR().pop();
 			} else {
-				tinyVm.getHeap()[tinyVm.getHeapCounter()] = new TinyObject(tinyVm.getClasses().get("DivisionByZeroException"));
-				tinyVm.incrementHeapCounter();
-				tinyVm.throwException(tinyVm.getHeapCounter() - 1);
+				if(tinyVm.getCurrentFrame().checkFrame()) {
+					tinyVm.getCurrentFrame().commitLocalHeap();
+					tinyVm.getHeap()[tinyVm.getHeapCounter()] = new TinyObject(tinyVm.getClasses().get("DivisionByZeroException"));
+					tinyVm.incrementHeapCounter();
+					tinyVm.throwException(tinyVm.getHeapCounter() - 1);
+				} else {
+					tinyVm.getCurrentFrame().rollback();
+				}
 			}
 			break;
 		case SHL:

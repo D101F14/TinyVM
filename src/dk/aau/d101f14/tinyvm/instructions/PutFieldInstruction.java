@@ -1,5 +1,7 @@
 package dk.aau.d101f14.tinyvm.instructions;
 
+import java.util.AbstractMap.SimpleEntry;
+
 import dk.aau.d101f14.tinyvm.FieldDescriptorInfo;
 import dk.aau.d101f14.tinyvm.OpCode;
 import dk.aau.d101f14.tinyvm.StringInfo;
@@ -30,18 +32,28 @@ public class PutFieldInstruction extends Instruction {
 		FieldDescriptorInfo fieldDescriptor = (FieldDescriptorInfo)tinyVm.getCurrentFrame().getMethod().getTinyClass().getConstantPool()[getAddress()];
 		StringInfo fieldName = (StringInfo)tinyVm.getCurrentFrame().getMethod().getTinyClass().getConstantPool()[fieldDescriptor.getFieldName()];
 		
-		Integer objectRef = tinyVm.getCurrentFrame().getOperandStack().pop();
+		int objectRef = tinyVm.getCurrentFrame().getOperandStack().pop();
+		int objectRefR = tinyVm.getCurrentFrame().getOperandStackR().pop();
 
-		if(objectRef > 0) {
-			tinyVm.getHeap()[objectRef].getFields().put(fieldName.getBytesString(), tinyVm.getCurrentFrame().getOperandStack().pop());
+		if(objectRef > 0 && objectRefR > 0) {
+			tinyVm.getCurrentFrame().getLocalHeap().put(new SimpleEntry<Integer, String>(objectRef, fieldName.getBytesString()), tinyVm.getCurrentFrame().getOperandStack().pop());		
+			tinyVm.getCurrentFrame().getLocalHeapR().put(new SimpleEntry<Integer, String>(objectRefR, fieldName.getBytesString()), tinyVm.getCurrentFrame().getOperandStackR().pop());		
+			
 			tinyVm.getCurrentFrame().incrementCodePointer(3);
+			tinyVm.getCurrentFrame().incrementCodePointerR(3);
+			
 			if(tinyVm.getDebug()) {
 				System.out.println("PUTFIELD\t" + getAddress());		
 			}
 		} else {
-			tinyVm.getHeap()[tinyVm.getHeapCounter()] = new TinyObject(tinyVm.getClasses().get("NullReferenceException"));
-			tinyVm.incrementHeapCounter();
-			tinyVm.throwException(tinyVm.getHeapCounter() - 1);
+			if(tinyVm.getCurrentFrame().checkFrame()) {
+				tinyVm.getCurrentFrame().commitLocalHeap();
+				tinyVm.getHeap()[tinyVm.getHeapCounter()] = new TinyObject(tinyVm.getClasses().get("NullReferenceException"));
+				tinyVm.incrementHeapCounter();
+				tinyVm.throwException(tinyVm.getHeapCounter() - 1);
+			} else {
+				tinyVm.getCurrentFrame().rollback();
+			}
 		}
 	}
 

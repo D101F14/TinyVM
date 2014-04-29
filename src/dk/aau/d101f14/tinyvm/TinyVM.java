@@ -94,7 +94,7 @@ public class TinyVM {
 		}
 	}
 	
-	public void throwException(int exception) {
+	public void throwException(int exception) {			
 		ClassNameInfo exceptionNameInfo = (ClassNameInfo)heap[exception].tinyClass.constantPool[heap[exception].tinyClass.thisRef];
 		String exceptionName = ((StringInfo)heap[exception].tinyClass.constantPool[exceptionNameInfo.getClassName()]).getBytesString();
 		if(getCurrentFrame().method.handlerCount > 0) {
@@ -106,6 +106,13 @@ public class TinyVM {
 						getCurrentFrame().setCodePointer(handler.startPc);
 						getCurrentFrame().getOperandStack().clear();
 						getCurrentFrame().getOperandStack().push(exception);
+						
+						getCurrentFrame().setCodePointerR(handler.startPc);
+						getCurrentFrame().getOperandStackR().clear();
+						getCurrentFrame().getOperandStackR().push(exception);
+						
+						getCurrentFrame().getCheckpoint().update(getCurrentFrame().getLocalVariables().clone(), (Stack<Integer>)getCurrentFrame().getOperandStack().clone(), handler.startPc);
+						
 						return;
 					}
 				}
@@ -121,6 +128,8 @@ public class TinyVM {
 			System.exit(1);
 		}
 	}
+	
+	
 	
 	public static void main(String[] args) {
 		TinyVM tinyVm = new TinyVM();

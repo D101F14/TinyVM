@@ -1,5 +1,8 @@
 package dk.aau.d101f14.tinyvm;
 
+import java.util.AbstractMap.SimpleEntry;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Stack;
 
 import dk.aau.d101f14.tinyvm.instructions.*;
@@ -7,29 +10,34 @@ import dk.aau.d101f14.tinyvm.instructions.*;
 public class TinyFrame {
 	TinyVM tinyVm;
 	TinyMethod method;
-	
+	Checkpoint checkpoint;
 	
 	int[] localVariables;
 	Stack<Integer> operandStack;
 	int codePointer;
+	HashMap<SimpleEntry<Integer, String>, Integer> localHeap;
 	
 	// Redundant elements
 	int[] localVariablesR;
 	Stack<Integer> operandStackR;
 	int codePointerR;
+	HashMap<SimpleEntry<Integer, String>, Integer> localHeapR;
 	
 	public TinyFrame(TinyVM tinyVm, int[] localVariables, TinyMethod method) {
 		this.tinyVm = tinyVm;
 		this.method = method;
 		
-		this.localVariables = localVariables;
+		this.localVariables = localVariables.clone();
 		operandStack = new Stack<Integer>();
 		codePointer = 0;
+		localHeap = new HashMap<SimpleEntry<Integer, String>, Integer>();
 		
-		localVariablesR = localVariables;
+		localVariablesR = localVariables.clone();
 		operandStackR = new Stack<Integer>();
 		codePointerR = 0;
+		localHeapR = new HashMap<SimpleEntry<Integer, String>, Integer>();
 		
+		checkpoint = new Checkpoint(localVariables.clone(), new Stack<Integer>(), 0);
 	}
 	
 	public int[] getLocalVariables() {
@@ -76,6 +84,61 @@ public class TinyFrame {
 		return operandStackR;
 	}
 
+	public HashMap<SimpleEntry<Integer, String>, Integer> getLocalHeap() {
+		return localHeap;
+	}
+
+	public HashMap<SimpleEntry<Integer, String>, Integer> getLocalHeapR() {
+		return localHeapR;
+	}
+	
+	public Checkpoint getCheckpoint() {
+		return checkpoint;
+	}
+	
+	public void commitLocalHeap() {
+		for(SimpleEntry<Integer, String> objectField : localHeap.keySet()) {
+			tinyVm.getHeap()[objectField.getKey()].fields.put(objectField.getValue(), localHeap.get(objectField));
+		}
+		
+		localHeap.clear();
+		localHeapR.clear();
+	}
+	
+	public void rollback() {
+		localHeap.clear();
+		localHeapR.clear();
+		
+		operandStack = (Stack<Integer>)checkpoint.getOperandStack().clone();
+		operandStackR = (Stack<Integer>)checkpoint.getOperandStack().clone();
+		
+		localVariables = checkpoint.getLocalVariables().clone();
+		localVariablesR = checkpoint.getLocalVariables().clone();
+		
+		codePointer = checkpoint.getCodePointer();
+		codePointerR = checkpoint.getCodePointer();
+	}
+	
+	public boolean checkFrame() {
+		boolean validOperandStack = true;
+		boolean validLocalVariables = true;
+		boolean validLocalHeap = true;
+		boolean validCodePointer = codePointer == codePointerR;
+
+		for(int i = 0; i < operandStack.size(); i++) {
+			if(operandStack.get(i) != operandStackR.get(i)) validOperandStack = false;
+		}
+		
+		for(int i = 0; i < localVariables.length; i++) {
+			if(localVariables[i] != localVariablesR[i]) validLocalVariables = false;
+		}
+		
+		for(int i = 0; i < localHeap.entrySet().size(); i++) {
+			if(localHeap.entrySet().toArray()[i] != localHeapR.entrySet().toArray()[i]) validLocalHeap = false;
+		}
+		
+		return validOperandStack && validLocalVariables && validLocalHeap && validCodePointer;
+	}
 	
 	public void execute() {
 		Instruction instruction = null;
