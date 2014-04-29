@@ -1,0 +1,185 @@
+{
+    "cp_count": 16,
+    "constant_pool": [
+        {
+			//0
+            "tag": 1,
+            "class_name": 1
+        },
+        {
+			//1
+            "tag": 4,
+            "length": 10,
+            "bytes": "LinkedList"
+        },
+        {
+			//2
+            "tag": 1,
+            "class_name": 3
+        },
+        {
+			//3
+            "tag": 4,
+            "length": 6,
+            "bytes": "Object"
+        },
+        {
+			//4
+            "tag": 2,
+            "class_name": 1,
+            "field_name": 5,
+            "field_type": 6
+        },
+        {
+            //5
+			"tag": 4,
+            "length": 5,
+            "bytes": "value"
+        },
+        {
+			//6
+            "tag": 5,
+            "type": "i"
+        },
+        {
+			//7
+            "tag": 2,
+            "class_name": 1,
+            "field_name": 8,
+            "field_type": 9
+        },
+        {
+            //8
+			"tag": 4,
+            "length": 3,
+            "bytes": "nextElem"
+        },
+        {
+			//9
+            "tag": 5,
+            "type": "l(LinkedList)"
+        },
+        {
+			//10
+            "tag": 3,
+            "class_name": 1,
+            "method_name": 11,
+            "arg_count": 0,
+            "ret_type": 12
+        },
+        {
+			//11
+            "tag": 4,
+            "length": 7,
+            "bytes": "addElem"
+        },
+        {
+			//12
+            "tag": 5,
+            "type": "v"
+        },
+        {
+			//13
+            "tag": 3,
+            "class_name": 3,
+            "method_name": 14,
+            "arg_count": 0,
+            "ret_type": 12
+        },
+        {
+			//14
+            "tag": 4,
+            "length": 6,
+            "bytes": "<init>"
+        },
+        {
+			//15
+            "tag": 3,
+            "class_name": 1,
+            "method_name": 14,
+            "arg_count": 0,
+            "ret_type": 12
+        },
+        {
+			//16
+            "tag": 3,
+            "class_name": 1,
+            "method_name": 14,
+            "arg_count": 1,
+            "ret_type": 12,
+            "arg_types": [6]
+        },
+        {
+			//17
+            "tag": 4,
+            "length": 6,
+            "bytes": "LinkedList"
+        },
+        {
+			//18
+            "tag": 3,
+            "class_name": 1,
+            "method_name": 14,
+            "arg_count": 2,
+            "ret_type": 12,
+            "arg_types": [6,6]
+        }
+    ],
+    "this": 0,
+    "super": 2,
+    "method_count": 3,
+    "methods": [
+        {
+            "method_descriptor": 15,
+            "max_stack": 1,
+            "max_locals": 1,
+            "code_length": 9,
+            "code": [
+                "load REF 0",
+                "invokevirtual 13",
+				"push REF 0"
+                "load REF 0",
+				"putfield 7"
+				"push INT 0"
+                "load REF 0",
+				"putfield 4"
+                "return VOID"
+            ],
+            "handler_count": 0
+        },
+        {
+            "method_descriptor": 13,
+            "max_stack": 1,
+            "max_locals": 1,
+            "code_length": 9,
+            "code": [
+                "load REF 0",
+                "getfield 4",
+                "return INT"
+            ],
+            "handler_count": 0
+        },
+        {
+        	"method_descriptor": 13,
+        	"max_stack": 2,
+        	"max_locals": 3,
+        	"code_length": 41,
+        	"code": [
+        		"new 0",
+        		"dup",
+        		"invokevirtual 12",
+        		"store REF 1",
+        		"push INT 5",
+        		"load REF 1",
+        		"putfield 4",
+        		"push INT 0",
+        		"load REF 1",
+        		"invokevirtual 7",
+        		"comp DIV",
+        		"store INT 2",
+        		"return VOID"
+        	],
+        	"handler_count": 0
+        }
+    ]
+}
