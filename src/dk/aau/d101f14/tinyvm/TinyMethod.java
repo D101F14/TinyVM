@@ -19,15 +19,15 @@ public class TinyMethod {
 	
 	public void read(InputStream stream) {
 		try {
-			methodDescriptor = stream.read() << 8 | stream.read();
-			maxStack = stream.read() << 8 | stream.read();
-			maxLocals = stream.read() << 8 | stream.read();
-			codeLength = stream.read() << 8 | stream.read();
+			methodDescriptor = (int)(stream.read() & 0xFF << 8) | (int)(stream.read() & 0xFF);
+			maxStack = (int)(stream.read() & 0xFF << 8) | (int)(stream.read() & 0xFF);
+			maxLocals = (int)(stream.read() & 0xFF << 8) | (int)(stream.read() & 0xFF);
+			codeLength = (int)(stream.read() & 0xFF << 8) | (int)(stream.read() & 0xFF);
 			code = new byte[codeLength];
 			for(int i = 0; i < codeLength; i++) {
 				code[i] = (byte)stream.read();
 			}
-			handlerCount = stream.read() << 8 | stream.read();
+			handlerCount = (int)(stream.read() & 0xFF << 8) | (int)(stream.read() & 0xFF);
 			handlers = new TinyHandler[handlerCount];
 			for(int i = 0; i < handlerCount; i++) {
 				handlers[i] = new TinyHandler();

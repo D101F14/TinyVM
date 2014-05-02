@@ -15,8 +15,8 @@ public class DupInstruction extends Instruction {
 
 	@Override
 	public void execute() {
-		tinyVm.getCurrentFrame().getOperandStack().push(tinyVm.getCurrentFrame().getOperandStack().peek());
-		tinyVm.getCurrentFrame().getOperandStackR().push(tinyVm.getCurrentFrame().getOperandStackR().peek());
+		tinyVm.getCurrentFrame().getOperandStack().push(new Integer(tinyVm.getCurrentFrame().getOperandStack().peek()));
+		tinyVm.getCurrentFrame().getOperandStackR().push(new Integer(tinyVm.getCurrentFrame().getOperandStackR().peek()));
 		
 		tinyVm.getCurrentFrame().incrementCodePointer(1);
 		tinyVm.getCurrentFrame().incrementCodePointerR(1);

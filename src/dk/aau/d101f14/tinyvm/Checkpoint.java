@@ -28,7 +28,10 @@ public class Checkpoint {
 	
 	public void update(int[] localVariables, Stack<Integer> operandStack, int codePointer) {
 		this.localVariables = localVariables;
-		this.operandStack = operandStack;
+		this.operandStack.clear();
+		for(int i = 0; i < operandStack.size(); i++)	{
+			this.operandStack.add(new Integer(operandStack.get(i).intValue()));
+		}		
 		this.codePointer = codePointer;
 	}
 	

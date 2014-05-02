@@ -18,7 +18,7 @@ public class GetFieldInstruction extends Instruction {
 	}
 	
 	public int getAddress() {
-		return address1 << 8 | address2;
+		return (int)(address1 & 0xFF << 8) | (int)(address2 & 0xFF);
 	}
 
 	@Override
@@ -33,7 +33,7 @@ public class GetFieldInstruction extends Instruction {
 		StringInfo fieldName = (StringInfo)tinyVm.getCurrentFrame().getMethod().getTinyClass().getConstantPool()[fieldDescriptor.getFieldName()];
 		
 		int objectRef = tinyVm.getCurrentFrame().getOperandStack().pop();
-		int objectRefR = tinyVm.getCurrentFrame().getOperandStack().pop();
+		int objectRefR = tinyVm.getCurrentFrame().getOperandStackR().pop();
 		
 		if(objectRef > 0 && objectRefR > 0) {
 			Integer field = tinyVm.getCurrentFrame().getLocalHeap().get(new SimpleEntry<Integer, String>(objectRef, fieldName.getBytesString()));
@@ -42,14 +42,14 @@ public class GetFieldInstruction extends Instruction {
 			}
 			
 			Integer fieldR = tinyVm.getCurrentFrame().getLocalHeapR().get(new SimpleEntry<Integer, String>(objectRefR, fieldName.getBytesString()));
-			if(field == null) {
+			if(fieldR == null) {
 					fieldR = tinyVm.getHeap()[objectRefR].getFields().get(fieldName.getBytesString());
 			}
 
-			tinyVm.getCurrentFrame().getOperandStack().push(field);
+			tinyVm.getCurrentFrame().getOperandStack().push(new Integer(field.intValue()));
 			tinyVm.getCurrentFrame().incrementCodePointer(3);
 
-			tinyVm.getCurrentFrame().getOperandStackR().push(fieldR);
+			tinyVm.getCurrentFrame().getOperandStackR().push(new Integer(fieldR.intValue()));
 			tinyVm.getCurrentFrame().incrementCodePointerR(3);
 			
 			if(tinyVm.getDebug()) {

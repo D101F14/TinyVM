@@ -20,10 +20,10 @@ public class PushInstruction extends Instruction {
 	}
 	
 	public int getValue() {
-		if(type != Type.INT) {
-			return value;
+		if(type != Type.INT && type != Type.REF) {
+			return (int)(value & 0xFF);
 		} else {
-			return value << 8 | value2;
+			return (int)(value & 0xFF << 8) | (int)(value2 & 0xFF);
 		}
 	}
 	
@@ -31,7 +31,7 @@ public class PushInstruction extends Instruction {
 	public void read(byte[] code, int opCodeIndex) {
 		type = Type.get(code[opCodeIndex + 1]);
 		value = code[opCodeIndex + 2];
-		if(type == Type.INT) {
+		if(type == Type.INT || type == Type.REF) {
 			value2 = code[opCodeIndex + 3];
 		}
 	}
@@ -39,11 +39,11 @@ public class PushInstruction extends Instruction {
 	@Override
 	public void execute() {
 		//Push value to operand stack
-		tinyVm.getCurrentFrame().getOperandStack().push(getValue());
-		tinyVm.getCurrentFrame().getOperandStackR().push(getValue());
+		tinyVm.getCurrentFrame().getOperandStack().push(new Integer(getValue()));
+		tinyVm.getCurrentFrame().getOperandStackR().push(new Integer(getValue()));
 				
 		//Increment code pointer
-		if(type == Type.INT) {
+		if(type == Type.INT || type == Type.REF) {
 			tinyVm.getCurrentFrame().incrementCodePointer(4);
 			tinyVm.getCurrentFrame().incrementCodePointerR(4);
 		} else {

@@ -1,7 +1,5 @@
 package dk.aau.d101f14.tinyvm.instructions;
 
-import java.util.Stack;
-
 import dk.aau.d101f14.tinyvm.MethodDescriptorInfo;
 import dk.aau.d101f14.tinyvm.OpCode;
 import dk.aau.d101f14.tinyvm.StringInfo;
@@ -21,7 +19,7 @@ public class InvokeVirtualInstruction extends Instruction {
 	}
 
 	public int getAddress() {
-		return address1 << 8 | address2;
+		return (int)(address1 & 0xFF << 8) | (int)(address2 & 0xFF);
 	}
 
 	@Override
@@ -35,8 +33,8 @@ public class InvokeVirtualInstruction extends Instruction {
 		if(tinyVm.getCurrentFrame().checkFrame()) {
 			tinyVm.getCurrentFrame().commitLocalHeap();
 			tinyVm.getCurrentFrame().getCheckpoint().update(tinyVm.getCurrentFrame().getLocalVariables().clone(), 
-					(Stack<Integer>)tinyVm.getCurrentFrame().getOperandStack().clone(), 
-					tinyVm.getCurrentFrame().getCodePointer());
+					tinyVm.getCurrentFrame().getOperandStack(), 
+					tinyVm.getCurrentFrame().getCodePointer()+3);
 			
 			MethodDescriptorInfo methodDescriptor = (MethodDescriptorInfo)tinyVm.getCurrentFrame().getMethod().getTinyClass().getConstantPool()[getAddress()];
 			StringInfo className = (StringInfo)tinyVm.getCurrentFrame().getMethod().getTinyClass().getConstantPool()[methodDescriptor.getClassName()];
@@ -66,6 +64,10 @@ public class InvokeVirtualInstruction extends Instruction {
 				localVariables[i] = tinyVm.getCurrentFrame().getOperandStack().pop();
 				tinyVm.getCurrentFrame().getOperandStackR().pop();
 			}
+			
+			tinyVm.getCurrentFrame().incrementCodePointer(3);
+			tinyVm.getCurrentFrame().incrementCodePointerR(3);
+			
 			tinyVm.getCallStack().push(new TinyFrame(tinyVm, localVariables, method));
 			
 			if(tinyVm.getDebug()) {

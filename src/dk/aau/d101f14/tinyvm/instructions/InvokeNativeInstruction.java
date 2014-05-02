@@ -2,7 +2,6 @@ package dk.aau.d101f14.tinyvm.instructions;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Stack;
 
 import dk.aau.d101f14.tinyvm.NativeMethodDescriptorInfo;
 import dk.aau.d101f14.tinyvm.OpCode;
@@ -18,7 +17,7 @@ public class InvokeNativeInstruction extends Instruction {
 	}
 
 	public int getAddress() {
-		return address1 << 8 | address2;
+		return (int)(address1 & 0xFF << 8) | (int)(address2 & 0xFF);
 	}
 
 	@Override
@@ -32,8 +31,8 @@ public class InvokeNativeInstruction extends Instruction {
 		if(tinyVm.getCurrentFrame().checkFrame()) {
 			tinyVm.getCurrentFrame().commitLocalHeap();
 			tinyVm.getCurrentFrame().getCheckpoint().update(tinyVm.getCurrentFrame().getLocalVariables().clone(), 
-					(Stack<Integer>)tinyVm.getCurrentFrame().getOperandStack().clone(), 
-					tinyVm.getCurrentFrame().getCodePointer());
+					tinyVm.getCurrentFrame().getOperandStack(), 
+					tinyVm.getCurrentFrame().getCodePointer()+3);
 			
 			NativeMethodDescriptorInfo nativeMethodDescriptor = (NativeMethodDescriptorInfo)tinyVm.getCurrentFrame().getMethod().getTinyClass().getConstantPool()[getAddress()];
 			StringInfo libraryPathInfo = (StringInfo)tinyVm.getCurrentFrame().getMethod().getTinyClass().getConstantPool()[nativeMethodDescriptor.getLibraryPath()];
@@ -54,8 +53,8 @@ public class InvokeNativeInstruction extends Instruction {
 			
 			int result = tinyVm.getNativeInterface().execute(libraryPath.toString(), methodName, args);
 			
-			tinyVm.getCurrentFrame().getOperandStack().push(result);
-			tinyVm.getCurrentFrame().getOperandStackR().push(result);
+			tinyVm.getCurrentFrame().getOperandStack().push(new Integer(result));
+			tinyVm.getCurrentFrame().getOperandStackR().push(new Integer(result));
 			
 			tinyVm.getCurrentFrame().incrementCodePointer(3);
 			tinyVm.getCurrentFrame().incrementCodePointerR(3);

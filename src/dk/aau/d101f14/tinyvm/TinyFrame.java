@@ -2,7 +2,6 @@ package dk.aau.d101f14.tinyvm;
 
 import java.util.AbstractMap.SimpleEntry;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Stack;
 
 import dk.aau.d101f14.tinyvm.instructions.*;
@@ -106,11 +105,19 @@ public class TinyFrame {
 	}
 	
 	public void rollback() {
+		System.out.println("ROLLBACK!");
 		localHeap.clear();
 		localHeapR.clear();
 		
-		operandStack = (Stack<Integer>)checkpoint.getOperandStack().clone();
-		operandStackR = (Stack<Integer>)checkpoint.getOperandStack().clone();
+		operandStack.clear();
+		operandStackR.clear();
+		
+		for(int i = 0; i < checkpoint.operandStack.size(); i++)	{
+			operandStack.add(new Integer(checkpoint.operandStack.get(i).intValue()));
+			operandStackR.add(new Integer(checkpoint.operandStack.get(i).intValue()));
+		}
+		//operandStack = (Stack<Integer>)checkpoint.getOperandStack().clone();
+		//operandStackR = (Stack<Integer>)checkpoint.getOperandStack().clone();
 		
 		localVariables = checkpoint.getLocalVariables().clone();
 		localVariablesR = checkpoint.getLocalVariables().clone();
@@ -126,7 +133,7 @@ public class TinyFrame {
 		boolean validCodePointer = codePointer == codePointerR;
 
 		for(int i = 0; i < operandStack.size(); i++) {
-			if(operandStack.get(i) != operandStackR.get(i)) validOperandStack = false;
+			if(operandStack.get(i).intValue() != operandStackR.get(i).intValue()) validOperandStack = false;
 		}
 		
 		for(int i = 0; i < localVariables.length; i++) {
@@ -134,7 +141,8 @@ public class TinyFrame {
 		}
 		
 		for(int i = 0; i < localHeap.entrySet().size(); i++) {
-			if(localHeap.entrySet().toArray()[i] != localHeapR.entrySet().toArray()[i]) validLocalHeap = false;
+			if(!localHeap.entrySet().toArray()[i].equals(localHeapR.entrySet().toArray()[i])) validLocalHeap = false;
+				
 		}
 		
 		return validOperandStack && validLocalVariables && validLocalHeap && validCodePointer;
@@ -193,7 +201,8 @@ public class TinyFrame {
 			instruction = new ThrowInstruction(tinyVm);
 			break;
 		default:
-			break;
+			rollback();
+			return;
 		}
 		instruction.read(method.getCode(), codePointer);
 		instruction.execute();

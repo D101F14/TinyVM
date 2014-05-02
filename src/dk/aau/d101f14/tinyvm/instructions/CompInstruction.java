@@ -102,6 +102,7 @@ public class CompInstruction extends Instruction {
 					tinyVm.throwException(tinyVm.getHeapCounter() - 1);
 				} else {
 					tinyVm.getCurrentFrame().rollback();
+					return;
 				}
 			}
 			break;
@@ -120,6 +121,7 @@ public class CompInstruction extends Instruction {
 					tinyVm.throwException(tinyVm.getHeapCounter() - 1);
 				} else {
 					tinyVm.getCurrentFrame().rollback();
+					return;
 				}
 			}
 			break;
@@ -165,11 +167,14 @@ public class CompInstruction extends Instruction {
 			tinyVm.getCurrentFrame().getOperandStack().pop();
 			tinyVm.getCurrentFrame().getOperandStackR().pop();
 			break;
+		default:
+			tinyVm.getCurrentFrame().rollback();
+			return;
 		}
 		
 		// Push result onto operand stack
-		tinyVm.getCurrentFrame().getOperandStack().push(result);
-		tinyVm.getCurrentFrame().getOperandStackR().push(resultR);
+		tinyVm.getCurrentFrame().getOperandStack().push(new Integer(result));
+		tinyVm.getCurrentFrame().getOperandStackR().push(new Integer(resultR));
 		
 		// Increment code pointer
 		tinyVm.getCurrentFrame().incrementCodePointer(2);

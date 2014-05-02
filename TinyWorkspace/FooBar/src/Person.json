@@ -1,0 +1,169 @@
+{
+	"constant_pool": [
+		{
+			"id": 0,
+			"tag": 1,
+			"class_name": 1
+		},
+		{ 
+			"id": 1,
+			"tag": 4,
+			"bytes": "Person"
+		},
+		{
+			"id": 2,
+			"tag": 1,
+			"class_name": 3
+		},
+		{
+			"id": 3,
+			"tag": 4,
+			"bytes": "Object"
+		},
+		{
+			"id": 4,
+			"tag": 3,
+			"class_name": 1,
+			"method_name": 5,
+			"ret_type": 6
+		},
+		{
+			"id": 5,
+			"tag": 4,
+			"bytes": "<init>"
+		},
+		{
+			"id": 6,
+			"tag": 5,
+			"type": "v"
+		},
+		{
+			"id": 7,
+			"tag": 2,
+			"class_name": 1,
+			"field_name": 8,
+			"field_type": 9
+		},
+		{
+			"id": 8,
+			"tag": 4,
+			"bytes": "age"
+		},
+		{
+			"id": 9,
+			"tag": 5,
+			"type": "i"
+		},
+		{
+			"id": 10,
+			"tag": 2,
+			"class_name": 1,
+			"field_name": 11,
+			"field_type": 9
+		},
+		{
+			"id": 11,
+			"tag": 4,
+			"bytes": "height"
+		},
+		{
+			"id": 12,
+			"tag": 2,
+			"class_name": 1,
+			"field_name": 13,
+			"field_type": 9
+		},
+		{
+			"id": 13,
+			"tag": 4,
+			"bytes": "weight"
+		},
+		{
+			"id": 14,
+			"tag": 3,
+			"class_name": 3,
+			"method_name": 5,
+			"ret_type": 6
+		},
+		{
+			"id": 15,
+			"tag": 3,
+			"class_name": 1,
+			"method_name": 16,
+			"ret_type": 9
+		},
+		{
+			"id": 16,
+			"tag": 4,
+			"bytes": "getAge"
+		},
+		{
+			"id": 17,
+			"tag": 3,
+			"class_name": 1,
+			"method_name": 18,
+			"ret_type": 9
+		},
+		{
+			"id": 18,
+			"tag": 4,
+			"bytes": "getHeight"
+		},
+		{
+			"id": 19,
+			"tag": 3,
+			"class_name": 1,
+			"method_name": 20,
+			"ret_type": 9
+		},
+		{
+			"id": 20,
+			"tag": 4,
+			"bytes": "getWeight"
+		}
+	],
+	"this": 0,
+	"super": 2,
+	"methods": [
+		{
+			"method_descriptor": 4,
+			"max_stack": 1,
+			"max_locals": 1,
+			"code": [
+				"load REF 0",
+				"invokevirtual 14",
+				"return VOID"
+			]
+		},
+		{
+			"method_descriptor": 15,
+			"max_stack": 1,
+			"max_locals": 1,
+			"code": [
+				"load REF 0",
+				"getfield 7",
+				"return INT"
+			]
+		},
+		{
+			"method_descriptor": 17,
+			"max_stack": 1,
+			"max_locals": 1,
+			"code": [
+				"load REF 0",
+				"getfield 10",
+				"return INT"
+			]
+		},
+		{
+			"method_descriptor": 19,
+			"max_stack": 1,
+			"max_locals": 1,
+			"code": [
+				"load REF 0",
+				"getfield 12",
+				"return INT"
+			]
+		}
+	]
+}

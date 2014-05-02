@@ -111,7 +111,7 @@ public class TinyVM {
 						getCurrentFrame().getOperandStackR().clear();
 						getCurrentFrame().getOperandStackR().push(exception);
 						
-						getCurrentFrame().getCheckpoint().update(getCurrentFrame().getLocalVariables().clone(), (Stack<Integer>)getCurrentFrame().getOperandStack().clone(), handler.startPc);
+						getCurrentFrame().getCheckpoint().update(getCurrentFrame().getLocalVariables().clone(), getCurrentFrame().getOperandStack(), handler.startPc);
 						
 						return;
 					}

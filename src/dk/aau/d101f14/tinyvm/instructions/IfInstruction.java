@@ -19,7 +19,7 @@ public class IfInstruction extends Instruction {
 	}
 	
 	public int getAddress() {
-		return address1 << 8 | address2;
+		return (int)(address1 & 0xFF << 8) | (int)(address2 & 0xFF);
 	}
 	
 	@Override
@@ -69,6 +69,9 @@ public class IfInstruction extends Instruction {
 			expression = (value1 != 0) ^ (value2 != 0);
 			expressionR = (value1R != 0) ^ (value2R != 0);
 			break;
+		default:
+			tinyVm.getCurrentFrame().rollback();
+			return;
 		}
 		
 		if(expression) {

@@ -1,0 +1,226 @@
+{
+	"constant_pool": [
+		{
+			"id": 0,
+			"tag": 1,
+			"class_name": 1
+		},
+		{
+			"id": 1,
+			"tag": 4,
+			"bytes": "Test"
+		},
+		{
+			"id": 2,
+			"tag": 1,
+			"class_name": 3
+		},
+		{
+			"id": 3,
+			"tag": 4,
+			"bytes": "Object"
+		},
+		{
+			"id": 4,
+			"tag": 3,
+			"class_name": 1,
+			"method_name": 5,
+			"ret_type": 6
+		},
+		{
+			"id": 5,
+			"tag": 4,
+			"bytes": "<init>"
+		},
+		{
+			"id": 6,
+			"tag": 5,
+			"type": "v"
+		},
+		{
+			"id": 7,
+			"tag": 3,
+			"class_name": 1,
+			"method_name": 8,
+			"ret_type": 6
+		},
+		{
+			"id": 8,
+			"tag": 4,
+			"bytes": "main"
+		},
+		{
+			"id": 9,
+			"tag": 1,
+			"class_name": 10
+		},
+		{
+			"id": 10,
+			"tag": 4,
+			"bytes": "Person"
+		},
+		{
+			"id": 11,
+			"tag": 3,
+			"class_name": 3,
+			"method_name": 5,
+			"ret_type": 6
+		},
+		{
+			"id": 12,
+			"tag": 1,
+			"class_name": 13
+		},
+		{
+			"id": 13,
+			"tag": 4,
+			"bytes": "Person"
+		},
+		{
+			"id": 14,
+			"tag": 2,
+			"class_name": 13,
+			"field_name": 15,
+			"field_type": 16
+		},
+		{
+			"id": 15,
+			"tag": 4,
+			"bytes": "age"
+		},
+		{
+			"id": 16,
+			"tag": 5,
+			"type": "i"
+		},
+		{
+			"id": 17,
+			"tag": 2,
+			"class_name": 13,
+			"field_name": 18,
+			"field_type": 16
+		},
+		{
+			"id": 18,
+			"tag": 4,
+			"bytes": "height"
+		},
+		{
+			"id": 19,
+			"tag": 2,
+			"class_name": 13,
+			"field_name": 20,
+			"field_type": 16
+		},
+		{
+			"id": 20,
+			"tag": 4,
+			"bytes": "weight"
+		},
+		{
+			"id": 21,
+			"tag": 3,
+			"class_name": 13,
+			"method_name": 22,
+			"ret_type": 16
+		},
+		{
+			"id": 22,
+			"tag": 4,
+			"bytes": "getAge"
+		},
+        {
+			"id": 23,
+			"tag": 4,
+			"bytes": "native/print.dll"
+        },
+        {
+			"id": 24,
+			"tag": 4,
+			"bytes": "printint"
+        },
+        {
+			"id": 25,
+			"tag": 6,
+			"library_path": 23,
+			"method_name": 24,
+			"arg_types": [16],
+			"ret_type": 16
+        },
+		{
+			"id": 26,
+			"tag": 1,
+			"class_name": 27
+		},
+		{
+			"id": 27,
+			"tag": 4,
+			"bytes": "NullReferenceException"
+		}
+		
+	],
+	"this": 0,
+	"super": 2,
+	"methods": [
+		{
+			"method_descriptor": 4,
+			"max_stack": 1,
+			"max_locals": 1,
+			"code": [
+				"load REF 0",
+				"invokevirtual 11",
+				"return VOID"
+			],
+			"handler_count": 0
+		},
+		{
+			"method_descriptor": 7,
+			"max_stack": 5,
+			"max_locals": 4,
+			"code": [
+				"new 12",			
+				"store REF 1",		
+				"push INT 32",		
+				"load REF 1",		
+				"putfield 14",		
+				"push INT 186", 	
+				"load REF 1",		
+				"putfield 17",		
+				"push INT 82",		
+				"load REF 1",		
+				"putfield 19",		
+				"push INT 0",		
+				"store INT 2",		
+				"push INT 9",		
+				"store INT 3",		
+				"load INT 3",		
+				"load INT 2",		
+				"if EQUALS 105",	
+				"push INT 1",		
+				"load REF 1",		
+				"getfield 14",		
+				"comp ADD",			
+				"load REF 1",		
+				"putfield 14",		
+				"push INT 1",		
+				"load INT 2",		
+				"comp ADD",			
+				"store INT 2",		
+				"goto 56",			
+				"load REF 1",		
+				"invokevirtual 21",	
+				"invokenative 25",	
+				"return VOID"		
+			],
+			"handlers": [
+				{
+					"start_pc": 0,
+					"end_pc": 114,
+					"handler_pc": 115,
+					"type": 26
+				}
+			]
+		}
+		
+	]
+}

@@ -1,7 +1,5 @@
 package dk.aau.d101f14.tinyvm.instructions;
 
-import java.util.Stack;
-
 import dk.aau.d101f14.tinyvm.OpCode;
 import dk.aau.d101f14.tinyvm.TinyVM;
 import dk.aau.d101f14.tinyvm.Type;
@@ -28,8 +26,8 @@ public class ReturnInstruction extends Instruction {
 		if(tinyVm.getCurrentFrame().checkFrame()) {
 			tinyVm.getCurrentFrame().commitLocalHeap();
 			tinyVm.getCurrentFrame().getCheckpoint().update(tinyVm.getCurrentFrame().getLocalVariables().clone(), 
-					(Stack<Integer>)tinyVm.getCurrentFrame().getOperandStack().clone(), 
-					tinyVm.getCurrentFrame().getCodePointer());
+					tinyVm.getCurrentFrame().getOperandStack(), 
+					tinyVm.getCurrentFrame().getCodePointer()+3);
 			
 			Integer value = null;
 			if(type != Type.VOID) {
@@ -40,12 +38,12 @@ public class ReturnInstruction extends Instruction {
 			
 			if(!tinyVm.getCallStack().isEmpty()) {
 				if(value != null) {
-					tinyVm.getCurrentFrame().getOperandStack().push(value);
-					tinyVm.getCurrentFrame().getOperandStackR().push(value);
+					tinyVm.getCurrentFrame().getOperandStack().push(new Integer(value));
+					tinyVm.getCurrentFrame().getOperandStackR().push(new Integer(value));
+					
+					tinyVm.getCurrentFrame().getCheckpoint().getOperandStack().push(new Integer(value));
 				}
 				
-				tinyVm.getCurrentFrame().incrementCodePointer(3);
-				tinyVm.getCurrentFrame().incrementCodePointerR(3);
 			}
 			if(tinyVm.getDebug()) {
 				System.out.println("RETURN\t" + getType());

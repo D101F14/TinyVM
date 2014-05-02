@@ -19,7 +19,7 @@ public class LoadInstruction extends Instruction {
 	}
 	
 	public int getAddress() {
-		return address1 << 8 | address2;
+		return (int)(address1 & 0xFF << 8) | (int)(address2 & 0xFF);
 	}
 	
 	@Override
@@ -31,8 +31,8 @@ public class LoadInstruction extends Instruction {
 
 	@Override
 	public void execute() {
-		tinyVm.getCurrentFrame().getOperandStack().push(tinyVm.getCurrentFrame().getLocalVariables()[getAddress()]);
-		tinyVm.getCurrentFrame().getOperandStackR().push(tinyVm.getCurrentFrame().getLocalVariablesR()[getAddress()]);
+		tinyVm.getCurrentFrame().getOperandStack().push(new Integer(tinyVm.getCurrentFrame().getLocalVariables()[getAddress()]));
+		tinyVm.getCurrentFrame().getOperandStackR().push(new Integer(tinyVm.getCurrentFrame().getLocalVariablesR()[getAddress()]));
 		
 		//Increment code pointer
 		tinyVm.getCurrentFrame().incrementCodePointer(4);
