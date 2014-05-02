@@ -20,6 +20,16 @@ public class Encoder {
 		System.out.write(value);
 	}
 	
+	public static int getArrayIndexById(JsonArray jsonArray, int id) {
+		for(int i = 0; i < jsonArray.size(); i++) {
+			JsonObject obj = jsonArray.get(i).getAsJsonObject();
+			if(obj.get("id").getAsInt() == id) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	
 	public static void main(String[] args) {
 		JsonParser parser = new JsonParser();
 		try {
@@ -27,52 +37,55 @@ public class Encoder {
 			byte[] cafebabe = new byte[]{(byte) 0xca, (byte) 0xfe, (byte) 0xba, (byte) 0xbe};
 			System.out.write(cafebabe);
 			
-			writeInt(classObject.get("cp_count").getAsInt());
-			
 			JsonArray constantPool = classObject.get("constant_pool").getAsJsonArray();
+			writeInt(constantPool.size());
 			for(int i = 0; i < constantPool.size(); i++) {
 				JsonObject cpInfo = constantPool.get(i).getAsJsonObject();
 				System.out.write(cpInfo.get("tag").getAsByte());
 				switch(cpInfo.get("tag").getAsByte()) {
 					case 1:
-						writeInt(cpInfo.get("class_name").getAsInt());
+						writeInt(getArrayIndexById(constantPool, cpInfo.get("class_name").getAsInt()));
 						break;
 					case 2:
-						writeInt(cpInfo.get("class_name").getAsInt());
-						writeInt(cpInfo.get("field_name").getAsInt());
-						writeInt(cpInfo.get("field_type").getAsInt());
+						writeInt(getArrayIndexById(constantPool, cpInfo.get("class_name").getAsInt()));
+						writeInt(getArrayIndexById(constantPool, cpInfo.get("field_name").getAsInt()));
+						writeInt(getArrayIndexById(constantPool, cpInfo.get("field_type").getAsInt()));
 						break;
 					case 3:
-						writeInt(cpInfo.get("class_name").getAsInt());
-						writeInt(cpInfo.get("method_name").getAsInt());
-						writeInt(cpInfo.get("arg_count").getAsInt());
-						for(int j = 0; j < cpInfo.get("arg_count").getAsInt(); j++) {
-							writeInt(cpInfo.get("arg_types").getAsJsonArray().get(j).getAsInt());
+						writeInt(getArrayIndexById(constantPool, cpInfo.get("class_name").getAsInt()));
+						writeInt(getArrayIndexById(constantPool, cpInfo.get("method_name").getAsInt()));
+						if(cpInfo.get("arg_types") != null) {
+							writeInt(cpInfo.get("arg_types").getAsJsonArray().size());
+							for(int j = 0; j < cpInfo.get("arg_types").getAsJsonArray().size(); j++) {
+								writeInt(getArrayIndexById(constantPool, cpInfo.get("arg_types").getAsJsonArray().get(j).getAsInt()));
+							}
+						} else {
+							writeInt(0);
 						}
-						writeInt(cpInfo.get("ret_type").getAsInt());
+						writeInt(getArrayIndexById(constantPool, cpInfo.get("ret_type").getAsInt()));
 						break;
 					case 4:
-						writeInt(cpInfo.get("length").getAsInt());
+						writeInt(cpInfo.get("bytes").getAsString().length());
 						System.out.print(cpInfo.get("bytes").getAsString());
 						break;
 					case 5:
 						System.out.print(cpInfo.get("type").getAsString());
 						break;
 					case 6:
-						writeInt(cpInfo.get("library_path").getAsInt());
-						writeInt(cpInfo.get("method_name").getAsInt());
-						writeInt(cpInfo.get("arg_count").getAsInt());
-						for(int j = 0; j < cpInfo.get("arg_count").getAsInt(); j++) {
-							writeInt(cpInfo.get("arg_types").getAsJsonArray().get(j).getAsInt());
+						writeInt(getArrayIndexById(constantPool, cpInfo.get("library_path").getAsInt()));
+						writeInt(getArrayIndexById(constantPool, cpInfo.get("method_name").getAsInt()));
+						writeInt(cpInfo.get("arg_types").getAsJsonArray().size());
+						for(int j = 0; j < cpInfo.get("arg_types").getAsJsonArray().size(); j++) {
+							writeInt(getArrayIndexById(constantPool, cpInfo.get("arg_types").getAsJsonArray().get(j).getAsInt()));
 						}
-						writeInt(cpInfo.get("ret_type").getAsInt());
+						writeInt(getArrayIndexById(constantPool, cpInfo.get("ret_type").getAsInt()));
 						break;
 				}
 			}
 			
-			writeInt(classObject.get("this").getAsInt());
-			writeInt(classObject.get("super").getAsInt());
-			writeInt(classObject.get("method_count").getAsInt());
+			writeInt(getArrayIndexById(constantPool, classObject.get("this").getAsInt()));
+			writeInt(getArrayIndexById(constantPool, classObject.get("super").getAsInt()));
+			writeInt(classObject.get("methods").getAsJsonArray().size());
 			
 			JsonArray methods = classObject.get("methods").getAsJsonArray();
 			
@@ -81,8 +94,68 @@ public class Encoder {
 				writeInt(tinyMethod.get("method_descriptor").getAsInt());
 				writeInt(tinyMethod.get("max_stack").getAsInt());
 				writeInt(tinyMethod.get("max_locals").getAsInt());
-				writeInt(tinyMethod.get("code_length").getAsInt());
 				JsonArray code = tinyMethod.get("code").getAsJsonArray();
+				int codeLength = 0;
+				for(int j = 0; j < code.size(); j++) {
+					String[] instructionString = code.get(j).getAsString().split(" ");
+					
+					switch(instructionString[0].toUpperCase()) {
+						case "NOP":
+							codeLength += 1;
+							break;
+						case "PUSH":
+							codeLength += 3;
+							if(Type.valueOf(instructionString[1]) == Type.INT || Type.valueOf(instructionString[1]) == Type.REF) {
+								codeLength += 1;
+							}
+							break;
+						case "POP":
+							codeLength += 2;
+							break;
+						case "LOAD":
+							codeLength += 4;
+							break;
+						case "STORE":
+							codeLength += 4;
+							break;
+						case "GOTO":
+							codeLength += 3;
+							break;
+						case "IF":
+							codeLength += 4;
+							break;
+						case "COMP":
+							codeLength += 2;
+							break;
+						case "NEW":
+							codeLength += 3;
+							break;
+						case "GETFIELD":
+							codeLength += 3;;
+							break;
+						case "PUTFIELD":
+							codeLength += 3;
+							break;
+						case "INVOKEVIRTUAL":
+							codeLength += 3;
+							break;
+						case "INVOKENATIVE":
+							codeLength += 3;
+							break;
+						case "RETURN":
+							codeLength += 2;
+							break;
+						case "DUP":
+							codeLength += 1;
+							break;
+						case "THROW":
+							codeLength += 1;
+							break;
+					}
+				}
+				
+				writeInt(codeLength);
+				
 				for(int j = 0; j < code.size(); j++) {
 					String[] instructionString = code.get(j).getAsString().split(" ");
 					switch(instructionString[0].toUpperCase()) {
@@ -93,7 +166,7 @@ public class Encoder {
 							System.out.write(OpCode.PUSH.getByte());
 							System.out.write(Type.valueOf(instructionString[1]).getByte());
 							short value = Short.parseShort(instructionString[2]);
-							if(Type.valueOf(instructionString[1]) == Type.INT) {
+							if(Type.valueOf(instructionString[1]) == Type.INT || Type.valueOf(instructionString[1]) == Type.REF) {
 								System.out.write((byte)((value & 0xFF00) >> 8));
 							}
 							System.out.write(value);
@@ -127,23 +200,23 @@ public class Encoder {
 							break;
 						case "NEW":
 							System.out.write(OpCode.NEW.getByte());
-							writeInt(Short.parseShort(instructionString[1]));
+							writeInt(getArrayIndexById(constantPool, Short.parseShort(instructionString[1])));
 							break;
 						case "GETFIELD":
 							System.out.write(OpCode.GETFIELD.getByte());
-							writeInt(Short.parseShort(instructionString[1]));
+							writeInt(getArrayIndexById(constantPool, Short.parseShort(instructionString[1])));
 							break;
 						case "PUTFIELD":
 							System.out.write(OpCode.PUTFIELD.getByte());
-							writeInt(Short.parseShort(instructionString[1]));
+							writeInt(getArrayIndexById(constantPool, Short.parseShort(instructionString[1])));
 							break;
 						case "INVOKEVIRTUAL":
 							System.out.write(OpCode.INVOKEVIRTUAL.getByte());
-							writeInt(Short.parseShort(instructionString[1]));
+							writeInt(getArrayIndexById(constantPool, Short.parseShort(instructionString[1])));
 							break;
 						case "INVOKENATIVE":
 							System.out.write(OpCode.INVOKENATIVE.getByte());
-							writeInt(Short.parseShort(instructionString[1]));
+							writeInt(getArrayIndexById(constantPool, Short.parseShort(instructionString[1])));
 							break;
 						case "RETURN":
 							System.out.write(OpCode.RETURN.getByte());
@@ -158,16 +231,20 @@ public class Encoder {
 					}
 				}
 				
-				writeInt(tinyMethod.get("handler_count").getAsInt());
-				if(tinyMethod.get("handler_count").getAsInt() > 0) {
-					JsonArray handlers = tinyMethod.get("handlers").getAsJsonArray();
-					for(int j = 0; j < handlers.size(); j++) {
-						JsonObject handler = handlers.get(j).getAsJsonObject();
-						writeInt(handler.get("start_pc").getAsInt());
-						writeInt(handler.get("end_pc").getAsInt());
-						writeInt(handler.get("handler_pc").getAsInt());
-						writeInt(handler.get("type").getAsInt());
+				if(tinyMethod.get("handlers") != null) {
+				writeInt(tinyMethod.get("handlers").getAsJsonArray().size());
+					if(tinyMethod.get("handlers").getAsJsonArray().size() > 0) {
+						JsonArray handlers = tinyMethod.get("handlers").getAsJsonArray();
+						for(int j = 0; j < handlers.size(); j++) {
+							JsonObject handler = handlers.get(j).getAsJsonObject();
+							writeInt(handler.get("start_pc").getAsInt());
+							writeInt(handler.get("end_pc").getAsInt());
+							writeInt(handler.get("handler_pc").getAsInt());
+							writeInt(getArrayIndexById(constantPool, handler.get("type").getAsInt()));
+						}
 					}
+				} else {
+					writeInt(0);
 				}
 			}
 			
