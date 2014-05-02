@@ -104,7 +104,7 @@ public class TinyClass {
 					}
 					case 5: {
 						byte type = (byte)stream.read();
-						if(String.valueOf((char)type) == "l") {
+						if(type == 108) {
 							int className = (int)(stream.read() & 0xFF << 8) | (int)(stream.read() & 0xFF);
 							constantPool[i] = new TypeInfo(type, className);
 							break;
@@ -161,7 +161,7 @@ public class TinyClass {
 						tinyVm.loadList.add(className);
 					}
 				} else if (cpInfo instanceof FieldDescriptorInfo) {
-					if(((FieldDescriptorInfo)cpInfo).getClassName() == thisRef) {
+					if(((FieldDescriptorInfo)cpInfo).getClassName() == ((ClassNameInfo)constantPool[thisRef]).getClassName()) {
 						String fieldName = ((StringInfo)constantPool[((FieldDescriptorInfo)cpInfo).getFieldName()]).getBytesString();
 						fields.add(fieldName);
 					}

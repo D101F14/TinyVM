@@ -1,0 +1,201 @@
+{
+    "constant_pool": [
+        {
+            "id": 0,
+            "tag": 1,
+            "class_name": 1
+        },
+        {
+            "id": 1,
+            "tag": 4,
+            "bytes": "NodeTest"
+        },
+        {
+            "id": 2,
+            "tag": 1,
+            "class_name": 3
+        },
+        {
+            "id": 3,
+            "tag": 4,
+            "bytes": "Object"
+        },
+        {
+            "id": 4,
+            "tag": 3,
+            "class_name": 3,
+            "method_name": 5,
+            "ret_type": 6
+        },
+        {
+            "id": 5,
+            "tag": 4,
+            "bytes": "<init>"
+        },
+        {
+            "id": 6,
+            "tag": 5,
+            "type": "v"
+        },
+        {
+            "id": 7,
+            "tag": 3,
+            "class_name": 1,
+            "method_name": 5,
+            "ret_type": 6
+        },
+        {
+            "id": 8,
+            "tag": 3,
+            "class_name": 1,
+            "method_name": 9,
+            "ret_type": 6
+        },
+        {
+            "id": 9,
+            "tag": 4,
+            "bytes": "main"
+        },
+        {
+            "id": 10,
+            "tag": 1,
+            "class_name": 11
+        },
+        {
+            "id": 11,
+            "tag": 4,
+            "bytes": "Node"
+        }, 
+        {
+            "id": 12,
+            "tag": 2,
+            "class_name": 11,
+            "field_name": 13,
+            "field_type": 14
+        },
+        {
+            "id": 13,
+            "tag": 4,
+            "bytes": "value"
+        },
+        {
+            "id": 14,
+            "tag": 5,
+            "type": "i"
+        }, 
+        {
+            "id": 15,
+            "tag": 2,
+            "class_name": 11,
+            "field_name": 16,
+            "field_type": 17
+        },
+        {
+            "id": 16,
+            "tag": 4,
+            "bytes": "next"
+        },
+        {
+            "id": 17,
+            "tag": 5,
+            "type": "l",
+			"class_name": 11
+        },
+        {
+        	"id": 18,
+        	"tag": 6,
+        	"library_path": 19,
+        	"method_name": 20,
+        	"arg_types": [14],
+        	"ret_type": 14
+        },
+        {
+        	"id": 19,
+        	"tag": 4,
+        	"bytes": "native/print.dll"
+        },
+        {
+        	"id": 20,
+        	"tag": 4,
+        	"bytes": "printint"
+        }
+    ],
+    "this": 0,
+    "super": 2,
+    "methods": [
+        {
+            "method_descriptor": 7,
+            "max_stack": 1,
+            "max_locals": 1,
+            "code": [
+                "load REF 0",
+                "invokevirtual 4",
+                "return VOID"
+            ]
+        },
+        {
+            "method_descriptor": 8,
+            "max_stack": 10,
+            "max_locals": 3,
+            "code": [
+				"new 10",
+				"dup",
+				"store REF 1",
+				"store REF 2",
+				"push INT 0",
+				"load REF 2",
+				"putfield 12",
+				"new 10",
+				"dup",
+				"load REF 2",
+				"putfield 15",
+				"store REF 2",
+				"push INT 1",
+				"load REF 2",
+				"putfield 12",
+				"new 10",
+				"dup",
+				"load REF 2",
+				"putfield 15",
+				"store REF 2",
+				"push INT 2",
+				"load REF 2",
+				"putfield 12",
+				"new 10",
+				"dup",
+				"load REF 2",
+				"putfield 15",
+				"store REF 2",
+				"push INT 3",
+				"load REF 2",
+				"putfield 12",
+				"load REF 1",
+				"store REF 2",
+				"load REF 2",
+				"push REF 0",
+				"if EQUALS 147",
+				"load REF 2",
+				"getfield 12",
+				"invokenative 18",
+				"pop 1",
+				"load REF 2",
+				"getfield 15",
+				"store REF 2",
+				"goto 109",
+				"return VOID"
+            ]
+        }
+    ]
+}
+
+
+
+
+
+
+
+
+
+
+
+

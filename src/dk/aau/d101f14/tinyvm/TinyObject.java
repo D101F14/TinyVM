@@ -18,7 +18,7 @@ public class TinyObject {
 	
 	public void addFields(TinyClass tinyClass) {
 		for(String fieldName : tinyClass.getFields()) {
-			fields.put(fieldName, 0);
+			fields.put(fieldName, new Integer(0));
 		}
 		if(tinyClass.getSuperClass() != null) {
 			addFields(tinyClass.getSuperClass());

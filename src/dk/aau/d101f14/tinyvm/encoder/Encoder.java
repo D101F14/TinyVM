@@ -70,6 +70,9 @@ public class Encoder {
 						break;
 					case 5:
 						System.out.print(cpInfo.get("type").getAsString());
+						if(cpInfo.get("type").getAsString().equals("l")) {
+							writeInt(getArrayIndexById(constantPool, cpInfo.get("class_name").getAsInt()));
+						}
 						break;
 					case 6:
 						writeInt(getArrayIndexById(constantPool, cpInfo.get("library_path").getAsInt()));
