@@ -140,9 +140,16 @@ public class TinyFrame {
 			if(localVariables[i] != localVariablesR[i]) validLocalVariables = false;
 		}
 		
-		for(int i = 0; i < localHeap.entrySet().size(); i++) {
-			if(!localHeap.entrySet().toArray()[i].equals(localHeapR.entrySet().toArray()[i])) validLocalHeap = false;
-				
+		if(localHeap.entrySet().size() == localHeapR.entrySet().size())
+		{
+			for(int i = 0; i < localHeap.entrySet().size(); i++) {
+				if(!localHeap.entrySet().toArray()[i].equals(localHeapR.entrySet().toArray()[i])) validLocalHeap = false;
+					
+			}
+		}
+		else
+		{
+			validLocalHeap = false;
 		}
 		
 		return validOperandStack && validLocalVariables && validLocalHeap && validCodePointer;

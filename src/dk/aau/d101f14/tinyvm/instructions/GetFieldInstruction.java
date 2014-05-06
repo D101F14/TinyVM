@@ -35,7 +35,7 @@ public class GetFieldInstruction extends Instruction {
 		int objectRef = tinyVm.getCurrentFrame().getOperandStack().pop();
 		int objectRefR = tinyVm.getCurrentFrame().getOperandStackR().pop();
 		
-		if(objectRef > 0 && objectRefR > 0) {
+		if(objectRef > 0 && objectRef < tinyVm.getHeapCounter() && objectRefR > 0 && objectRefR < tinyVm.getHeapCounter()) {
 			Integer field = tinyVm.getCurrentFrame().getLocalHeap().get(new SimpleEntry<Integer, String>(objectRef, fieldName.getBytesString()));
 			if(field == null) {
 					field = tinyVm.getHeap()[objectRef].getFields().get(fieldName.getBytesString());

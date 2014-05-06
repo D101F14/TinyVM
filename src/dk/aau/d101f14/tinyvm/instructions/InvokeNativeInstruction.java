@@ -30,9 +30,6 @@ public class InvokeNativeInstruction extends Instruction {
 	public void execute() {
 		if(tinyVm.getCurrentFrame().checkFrame()) {
 			tinyVm.getCurrentFrame().commitLocalHeap();
-			tinyVm.getCurrentFrame().getCheckpoint().update(tinyVm.getCurrentFrame().getLocalVariables().clone(), 
-					tinyVm.getCurrentFrame().getOperandStack(), 
-					tinyVm.getCurrentFrame().getCodePointer()+3);
 			
 			NativeMethodDescriptorInfo nativeMethodDescriptor = (NativeMethodDescriptorInfo)tinyVm.getCurrentFrame().getMethod().getTinyClass().getConstantPool()[getAddress()];
 			StringInfo libraryPathInfo = (StringInfo)tinyVm.getCurrentFrame().getMethod().getTinyClass().getConstantPool()[nativeMethodDescriptor.getLibraryPath()];
@@ -58,6 +55,10 @@ public class InvokeNativeInstruction extends Instruction {
 			
 			tinyVm.getCurrentFrame().incrementCodePointer(3);
 			tinyVm.getCurrentFrame().incrementCodePointerR(3);
+			
+			tinyVm.getCurrentFrame().getCheckpoint().update(tinyVm.getCurrentFrame().getLocalVariables().clone(), 
+					tinyVm.getCurrentFrame().getOperandStack(), 
+					tinyVm.getCurrentFrame().getCodePointer());
 			
 			if(tinyVm.getDebug()) {
 				System.out.println("INVOKENATIVE\t" + getAddress());		
