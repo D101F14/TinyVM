@@ -32,9 +32,6 @@ public class InvokeVirtualInstruction extends Instruction {
 	public void execute() {
 		if(tinyVm.getCurrentFrame().checkFrame()) {
 			tinyVm.getCurrentFrame().commitLocalHeap();
-			tinyVm.getCurrentFrame().getCheckpoint().update(tinyVm.getCurrentFrame().getLocalVariables().clone(), 
-					tinyVm.getCurrentFrame().getOperandStack(), 
-					tinyVm.getCurrentFrame().getCodePointer()+3);
 			
 			MethodDescriptorInfo methodDescriptor = (MethodDescriptorInfo)tinyVm.getCurrentFrame().getMethod().getTinyClass().getConstantPool()[getAddress()];
 			StringInfo className = (StringInfo)tinyVm.getCurrentFrame().getMethod().getTinyClass().getConstantPool()[methodDescriptor.getClassName()];
@@ -67,6 +64,10 @@ public class InvokeVirtualInstruction extends Instruction {
 			
 			tinyVm.getCurrentFrame().incrementCodePointer(3);
 			tinyVm.getCurrentFrame().incrementCodePointerR(3);
+			
+			tinyVm.getCurrentFrame().getCheckpoint().update(tinyVm.getCurrentFrame().getLocalVariables().clone(), 
+					tinyVm.getCurrentFrame().getOperandStack(), 
+					tinyVm.getCurrentFrame().getCodePointer());
 			
 			tinyVm.getCallStack().push(new TinyFrame(tinyVm, localVariables, method));
 			
