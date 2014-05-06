@@ -60,7 +60,7 @@ public class InvokeVirtualInstruction extends Instruction {
 			
 			TinyMethod method = TinyClass.methodLookup(tinyVm.getClasses().get(className.getBytesString()), methodName);
 			int[] localVariables = new int[method.getMaxLocals()];
-			for(int i = 0; i < localVariables.length; i++) {
+			for(int i = 0; i < methodDescriptor.getArgCount(); i++) {
 				localVariables[i] = tinyVm.getCurrentFrame().getOperandStack().pop();
 				tinyVm.getCurrentFrame().getOperandStackR().pop();
 			}
