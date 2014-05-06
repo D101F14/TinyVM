@@ -1,0 +1,237 @@
+{
+    "constant_pool": [
+        {
+            "id": 0,
+            "tag": 1,
+            "class_name": 1
+        },
+        {
+            "id": 1,
+            "tag": 4,
+            "bytes": "ArrayTest"
+        },
+        {
+            "id": 2,
+            "tag": 1,
+            "class_name": 3
+        },
+        {
+            "id": 3,
+            "tag": 4,
+            "bytes": "Object"
+        },
+        {
+            "id": 4,
+            "tag": 3,
+            "class_name": 3,
+            "method_name": 5,
+            "ret_type": 6
+        },
+        {
+            "id": 5,
+            "tag": 4,
+            "bytes": "<init>"
+        },
+        {
+            "id": 6,
+            "tag": 5,
+            "type": "v"
+        },
+        {
+            "id": 7,
+            "tag": 3,
+            "class_name": 1,
+            "method_name": 5,
+            "ret_type": 6
+        },
+        {
+            "id": 8,
+            "tag": 3,
+            "class_name": 1,
+            "method_name": 9,
+            "ret_type": 6
+        },
+        {
+            "id": 9,
+            "tag": 4,
+            "bytes": "main"
+        },
+        {
+            "id": 10,
+            "tag": 1,
+            "class_name": 11
+        },
+        {
+            "id": 11,
+            "tag": 4,
+            "bytes": "Array"
+        },
+        {
+            "id": 12,
+            "tag": 5,
+            "type": "i"
+        },
+        {
+            "id": 13,
+            "tag": 3,
+            "class_name": 11,
+            "method_name": 14,
+        	"arg_types": [12],
+            "ret_type": 12
+        },
+        {
+            "id": 14,
+            "tag": 4,
+            "bytes": "GetVal"
+        },
+        {
+            "id": 15,
+            "tag": 3,
+            "class_name": 11,
+            "method_name": 16,
+        	"arg_types": [12, 12],
+            "ret_type": 6
+        },
+        {
+            "id": 16,
+            "tag": 4,
+            "bytes": "SetVal"
+        },
+        {
+            "id": 17,
+            "tag": 3,
+            "class_name": 11,
+            "method_name": 18,
+        	"arg_types": [12],
+            "ret_type": 6
+        },
+        {
+            "id": 18,
+            "tag": 4,
+            "bytes": "AddVal"
+        },
+        {
+        	"id": 19,
+        	"tag": 6,
+        	"library_path": 20,
+        	"method_name": 21,
+        	"arg_types": [6],
+        	"ret_type": 6
+        },
+        {
+        	"id": 20,
+        	"tag": 4,
+        	"bytes": "native/print.dll"
+        },
+        {
+        	"id": 21,
+        	"tag": 4,
+        	"bytes": "printint"
+        },
+        {
+            "id": 22,
+            "tag": 3,
+            "class_name": 11,
+            "method_name": 5,
+			"arg_types": [12],
+            "ret_type": 6
+        },
+        {
+            "id": 23,
+            "tag": 3,
+            "class_name": 1,
+            "method_name": 24,
+			"arg_types": [25],
+            "ret_type": 6
+        },
+        {
+            "id": 24,
+            "tag": 4,
+            "bytes": "PrintArray"
+        },
+        {
+            "id": 25,
+            "tag": 5,
+            "type": "l",
+			"class_name": 11
+        },
+        {
+            "id": 26,
+            "tag": 2,
+            "class_name": 11,
+            "field_name": 27,
+            "field_type": 12
+        },
+        {
+            "id": 27,
+            "tag": 4,
+            "bytes": "length"
+        }
+    ],
+    "this": 0,
+    "super": 2,
+    "methods": [
+        {
+            "method_descriptor": 7,
+            "max_stack": 1,
+            "max_locals": 1,
+            "code": [
+                "load REF 0",
+                "invokevirtual 4",
+                "return VOID"
+            ]
+        },
+        {
+            "method_descriptor": 8,
+            "max_stack": 10,
+            "max_locals": 3,
+            "code": [
+				"new 10",
+				"store REF 1",
+				"push INT 0",
+				"load REF 1",
+				"invokevirtual 22",
+				"load REF 1",
+				"new 0",
+				"invokevirtual 23",
+				"return VOID"
+            ]
+        },
+        {
+            "method_descriptor": 23,
+            "max_stack": 10,
+            "max_locals": 3,
+            "code": [
+				"load REF 1",
+				"getfield 26",
+				"store INT 2",
+				"push INT 0",
+				"store INT 3",
+				"load INT 3",
+				"load REF 1",
+				"invokevirtual 13",
+				"invokenative 19",
+				"load INT 3",
+				"push INT 1",
+				"comp ADD",
+				"dup",
+				"store INT 3",
+				"load INT 2",
+				"if NEQUALS 19",
+				"return VOID"
+            ]
+        }
+    ]
+}
+
+
+
+
+
+
+
+
+
+
+
+

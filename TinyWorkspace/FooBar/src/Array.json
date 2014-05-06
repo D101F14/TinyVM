@@ -1,0 +1,277 @@
+{
+    "constant_pool": [
+        {
+            "id": 0,
+            "tag": 1,
+            "class_name": 1
+        },
+        {
+            "id": 1,
+            "tag": 4,
+            "bytes": "Array"
+        },
+        {
+            "id": 2,
+            "tag": 1,
+            "class_name": 3
+        },
+        {
+            "id": 3,
+            "tag": 4,
+            "bytes": "Object"
+        },
+        {
+            "id": 4,
+            "tag": 1,
+            "class_name": 5
+        },
+        {
+            "id": 5,
+            "tag": 4,
+            "bytes": "Node"
+        },
+        {
+            "id": 6,
+            "tag": 2,
+            "class_name": 1,
+            "field_name": 7,
+            "field_type": 8
+        },
+        {
+            "id": 7,
+            "tag": 4,
+            "bytes": "start"
+        },
+        {
+            "id": 8,
+            "tag": 5,
+            "type": "l",
+			"class_name": 5
+        },
+        {
+            "id": 9,
+            "tag": 2,
+            "class_name": 1,
+            "field_name": 10,
+            "field_type": 11
+        },
+        {
+            "id": 10,
+            "tag": 4,
+            "bytes": "length"
+        },
+        {
+            "id": 11,
+            "tag": 5,
+            "type": "i"
+        },
+        {
+            "id": 12,
+            "tag": 3,
+            "class_name": 3,
+            "method_name": 13,
+			"arg_types": [11],
+            "ret_type": 14
+        },
+        {
+            "id": 13,
+            "tag": 4,
+            "length": 6,
+            "bytes": "<init>"
+        },
+        {
+            "id": 14,
+            "tag": 5,
+            "type": "v"
+        },
+        {
+            "id": 15,
+            "tag": 3,
+            "class_name": 1,
+            "method_name": 13,
+            "ret_type": 14
+        },
+        {
+            "id": 16,
+            "tag": 3,
+            "class_name": 1,
+            "method_name": 17,
+        	"arg_types": [11],
+            "ret_type": 11
+        },
+        {
+            "id": 17,
+            "tag": 4,
+            "bytes": "GetVal"
+        },
+        {
+            "id": 18,
+            "tag": 3,
+            "class_name": 1,
+            "method_name": 19,
+        	"arg_types": [11, 11],
+            "ret_type": 14
+        },
+        {
+            "id": 19,
+            "tag": 4,
+            "bytes": "SetVal"
+        },
+        {
+            "id": 20,
+            "tag": 3,
+            "class_name": 1,
+            "method_name": 21,
+        	"arg_types": [11],
+            "ret_type": 14
+        },
+        {
+            "id": 21,
+            "tag": 4,
+            "bytes": "AddVal"
+        },
+        {
+            "id": 22,
+            "tag": 2,
+            "class_name": 4,
+            "field_name": 23,
+            "field_type": 8
+        },
+        {
+            "id": 23,
+            "tag": 4,
+            "bytes": "next"
+        },
+        {
+            "id": 24,
+            "tag": 2,
+            "class_name": 4,
+            "field_name": 25,
+            "field_type": 11
+        },
+        {
+            "id": 25,
+            "tag": 4,
+            "bytes": "value"
+        }
+    ],
+    "this": 0,
+    "super": 2,
+    "methods": [
+        {
+            "method_descriptor": 12,
+            "max_stack": 2,
+            "max_locals": 3,
+            "code": [
+                "load REF 0",
+                "invokevirtual 15",
+				"new 4",
+				"store REF 2",
+				"load INT 1",
+				"load REF 2",
+				"putfield 24",
+				"push INT 1",
+				"load REF 2",
+				"putfield 9",
+                "return VOID"
+            ]
+        },
+        {
+            "method_descriptor": 16,
+            "max_stack": 2,
+            "max_locals": 4,
+            "code": [
+				"load REF 0",
+				"getfield 6",
+				"store REF 3",
+				"load INT 1",
+				"push INT 0",
+				"if EQUALS 68",
+				"push INT 0",
+				"store INT 2",
+				"load REF 3",
+				"getfield 22",
+				"store REF 3",
+				"load INT 2",
+				"push INT 1",
+				"comp ADD",
+				"store INT 2",
+				"load INT 1",
+				"load INT 2",
+				"if NEQUALS 31",
+				"load REF 3",
+				"getfield 24",
+				"return INT"
+            ]
+        },
+        {
+            "method_descriptor": 18,
+            "max_stack": 3,
+            "max_locals": 5,
+            "code": [
+				"load REF 0",
+				"getfield 6",
+				"store REF 4",
+				"load INT 1",
+				"push INT 0",
+				"if EQUALS 68",
+				"push INT 0",
+				"store INT 3",
+				"load REF 4",
+				"getfield 22",
+				"store REF 4",
+				"load INT 3",
+				"push INT 1",
+				"comp ADD",
+				"store INT 3",
+				"load INT 1",
+				"load INT 3",
+				"if NEQUALS 31",
+				"load INT 2",
+				"load REF 4",
+				"putfield 24",
+				"return VOID"
+            ]
+        },
+        {
+            "method_descriptor": 20,
+            "max_stack": 4,
+            "max_locals": 4,
+            "code": [
+				"load REF 0",
+				"getfield 9",
+				"push INT 1",
+				"comp ADD",
+				"load REF 0",
+				"putfield 9",
+				"load REF 0",
+				"getfield 6",
+				"store REF 2",
+				"load REF 2",
+				"getfield 22",
+				"push REF 0",
+				"if EQUALS 49",
+				"load REF 2",
+				"getfield 22",
+				"dup",
+				"store REF 2",
+				"getfield 22",
+				"push REF 0",
+				"if NEQUALS 26",
+				"new 4",
+				"store REF 3",
+				"load INT 1",
+				"load REF 3",
+				"putfield 24",
+				"load REF 3",
+				"load REF 2",
+				"putfield 22",
+				"return VOID"
+            ]
+        }
+    ]
+}
+
+
+
+
