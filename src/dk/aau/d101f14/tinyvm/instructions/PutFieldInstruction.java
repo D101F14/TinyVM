@@ -2,6 +2,10 @@ package dk.aau.d101f14.tinyvm.instructions;
 
 import java.util.AbstractMap.SimpleEntry;
 
+import com.sun.org.apache.xalan.internal.xsltc.dom.MultiValuedNodeHeapIterator.HeapNode;
+
+import dk.aau.d101f14.tinyvm.CPInfo;
+import dk.aau.d101f14.tinyvm.ClassNameInfo;
 import dk.aau.d101f14.tinyvm.FieldDescriptorInfo;
 import dk.aau.d101f14.tinyvm.OpCode;
 import dk.aau.d101f14.tinyvm.StringInfo;
@@ -43,7 +47,15 @@ public class PutFieldInstruction extends Instruction {
 			tinyVm.getCurrentFrame().incrementCodePointerR(3);
 			
 			if(tinyVm.getDebug()) {
-				System.out.println("PUTFIELD\t" + getAddress());		
+				System.out.println("PUTFIELD\t" + getAddress());
+				if(tinyVm.getHeap()[objectRef].getTinyClass().getFields().contains(fieldName.getBytesString())){
+					int targetRef = tinyVm.getHeap()[objectRef].getTinyClass().getThisRef();
+					CPInfo[] targetCP = tinyVm.getHeap()[objectRef].getTinyClass().getConstantPool();
+					ClassNameInfo classNameInfo = (ClassNameInfo)targetCP[targetRef];
+					String className = ((StringInfo)targetCP[classNameInfo.getClassName()]).getBytesString();
+					System.out.println(className + " does not have field " + fieldName.getBytesString());
+					System.exit(0);
+				}		
 			}
 		} else {
 			if(tinyVm.getCurrentFrame().checkFrame()) {
