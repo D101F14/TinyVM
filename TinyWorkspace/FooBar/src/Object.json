@@ -34,7 +34,7 @@
 		{
 		    "method_descriptor": 2,
             "max_stack": 0,
-            "max_locals": 0,
+            "max_locals": 1,
             "code": [
                 "return VOID"
             ]

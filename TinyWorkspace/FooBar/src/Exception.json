@@ -50,8 +50,8 @@
 	"methods": [
 		{
 		    "method_descriptor": 2,
-            "max_stack": 0,
-            "max_locals": 0,
+            "max_stack": 1,
+            "max_locals": 1,
             "code": [
                 "load REF 0",
                 "invokevirtual 7",
