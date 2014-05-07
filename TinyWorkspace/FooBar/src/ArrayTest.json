@@ -188,9 +188,18 @@
             "code": [
 				"new 10",
 				"store REF 1",
-				"push INT 0",
+				"push INT 2",
 				"load REF 1",
 				"invokevirtual 22",
+				"push INT 4",
+				"load REF 1",
+				"invokevirtual 17",
+				"push INT 6",
+				"load REF 1",
+				"invokevirtual 17",
+				"push INT 8",
+				"load REF 1",
+				"invokevirtual 17",
 				"load REF 1",
 				"new 0",
 				"invokevirtual 23",
@@ -200,7 +209,7 @@
         {
             "method_descriptor": 23,
             "max_stack": 10,
-            "max_locals": 3,
+            "max_locals": 4,
             "code": [
 				"load REF 1",
 				"getfield 26",

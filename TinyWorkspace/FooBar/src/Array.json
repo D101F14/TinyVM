@@ -70,7 +70,6 @@
             "tag": 3,
             "class_name": 3,
             "method_name": 13,
-			"arg_types": [11],
             "ret_type": 14
         },
         {
@@ -89,6 +88,7 @@
             "tag": 3,
             "class_name": 1,
             "method_name": 13,
+			"arg_types": [11],
             "ret_type": 14
         },
         {
@@ -159,20 +159,23 @@
     "super": 2,
     "methods": [
         {
-            "method_descriptor": 12,
+            "method_descriptor": 15,
             "max_stack": 2,
             "max_locals": 3,
             "code": [
                 "load REF 0",
-                "invokevirtual 15",
+                "invokevirtual 12",
 				"new 4",
 				"store REF 2",
 				"load INT 1",
 				"load REF 2",
 				"putfield 24",
 				"push INT 1",
-				"load REF 2",
+				"load REF 0",
 				"putfield 9",
+				"load REF 2",
+				"load REF 0",
+				"putfield 6",
                 "return VOID"
             ]
         },
@@ -250,14 +253,11 @@
 				"load REF 2",
 				"getfield 22",
 				"push REF 0",
-				"if EQUALS 49",
+				"if EQUALS 60",
 				"load REF 2",
 				"getfield 22",
-				"dup",
 				"store REF 2",
-				"getfield 22",
-				"push REF 0",
-				"if NEQUALS 26",
+				"GOTO 31",
 				"new 4",
 				"store REF 3",
 				"load INT 1",
