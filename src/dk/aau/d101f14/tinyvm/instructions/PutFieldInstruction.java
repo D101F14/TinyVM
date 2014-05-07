@@ -48,7 +48,7 @@ public class PutFieldInstruction extends Instruction {
 			
 			if(tinyVm.getDebug()) {
 				System.out.println("PUTFIELD\t" + getAddress());
-				if(tinyVm.getHeap()[objectRef].getTinyClass().getFields().contains(fieldName.getBytesString())){
+				if(!tinyVm.getHeap()[objectRef].getTinyClass().getFields().contains(fieldName.getBytesString())){
 					int targetRef = tinyVm.getHeap()[objectRef].getTinyClass().getThisRef();
 					CPInfo[] targetCP = tinyVm.getHeap()[objectRef].getTinyClass().getConstantPool();
 					ClassNameInfo classNameInfo = (ClassNameInfo)targetCP[targetRef];
