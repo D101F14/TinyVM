@@ -6,6 +6,10 @@ public class TinyObject {
 	TinyClass tinyClass;
 	HashMap<String, Integer> fields;
 	
+	public TinyClass getTinyClass(){
+		return tinyClass;
+	}
+	
 	public HashMap<String, Integer> getFields() {
 		return fields;
 	}

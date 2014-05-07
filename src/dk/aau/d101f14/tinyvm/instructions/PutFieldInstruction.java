@@ -46,17 +46,19 @@ public class PutFieldInstruction extends Instruction {
 			tinyVm.getCurrentFrame().incrementCodePointer(3);
 			tinyVm.getCurrentFrame().incrementCodePointerR(3);
 			
+			boolean validField = tinyVm.getHeap()[objectRef].getTinyClass().getFields().contains(fieldName.getBytesString());
+			
 			if(tinyVm.getDebug()) {
 				System.out.println("PUTFIELD\t" + getAddress());
-				if(!tinyVm.getHeap()[objectRef].getTinyClass().getFields().contains(fieldName.getBytesString())){
+				if(!validField){
 					int targetRef = tinyVm.getHeap()[objectRef].getTinyClass().getThisRef();
 					CPInfo[] targetCP = tinyVm.getHeap()[objectRef].getTinyClass().getConstantPool();
 					ClassNameInfo classNameInfo = (ClassNameInfo)targetCP[targetRef];
 					String className = ((StringInfo)targetCP[classNameInfo.getClassName()]).getBytesString();
 					System.out.println(className + " does not have field " + fieldName.getBytesString());
-					System.exit(0);
 				}		
 			}
+			if(!validField) System.exit(0);
 		} else {
 			if(tinyVm.getCurrentFrame().checkFrame()) {
 				tinyVm.getCurrentFrame().commitLocalHeap();
