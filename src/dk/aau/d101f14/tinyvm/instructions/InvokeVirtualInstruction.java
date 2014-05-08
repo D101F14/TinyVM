@@ -72,7 +72,8 @@ public class InvokeVirtualInstruction extends Instruction {
 			tinyVm.getCallStack().push(new TinyFrame(tinyVm, localVariables, method));
 			
 			if(tinyVm.getDebug()) {
-				System.out.println("INVOKEVIRTUAL\t" + getAddress());		
+				int methodNameLength = methodName.indexOf('(');
+				System.out.println("INVOKEVIRTUAL\t" + getAddress() + "\t" + className.getBytesString() + "." + methodName.substring(0, methodNameLength));		
 			}
 		} else {
 			tinyVm.getCurrentFrame().rollback();
