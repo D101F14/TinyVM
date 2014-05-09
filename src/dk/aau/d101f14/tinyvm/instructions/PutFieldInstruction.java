@@ -58,7 +58,7 @@ public class PutFieldInstruction extends Instruction {
 					System.out.println(className + " does not have field " + fieldName.getBytesString());
 				}		
 			}
-			if(!validField) System.exit(0);
+			if(!validField) System.exit(5);
 		} else {
 			if(tinyVm.getCurrentFrame().checkFrame()) {
 				tinyVm.getCurrentFrame().commitLocalHeap();

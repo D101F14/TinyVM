@@ -127,7 +127,21 @@ public class TinyVM {
 			return;
 		} else {
 			System.out.println("Unhandled exception: " + exceptionName + ".");
-			System.exit(1);
+			switch (exceptionName)
+			{
+			case "NullReferenceException":
+				System.exit(2);
+				break;
+			case "OutOfMemoryException":
+				System.exit(3);
+				break;
+			case "DivisionByZeroException":
+				System.exit(4);
+				break;
+			default:
+				System.exit(1);
+				break;
+			}
 		}
 	}
 	
