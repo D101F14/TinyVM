@@ -24,9 +24,10 @@ public class InformationCollector {
         String pathToVMJarFile = args[1];
         String pathToScript = args[2];
         int numberOfTimesToRun = Integer.parseInt(args[3]);
+        String byteManPath = args[4];
         
         for(int i = 0; i < numberOfTimesToRun;i++){
-	        ProcessBuilder pb = new ProcessBuilder("java", "-javaagent:%BYTEMAN_HOME%\\lib\\byteman.jar=script:"+pathToScript, "-jar", pathToVMJarFile, pathToRootDirectoryForVM, ""+i);
+	        ProcessBuilder pb = new ProcessBuilder("java", "-javaagent:"+byteManPath +"\\lib\\byteman.jar=script:"+pathToScript, "-jar", pathToVMJarFile, pathToRootDirectoryForVM, ""+i);
 	        pb.redirectErrorStream();
 	        try {
 	            Process p = pb.start();
@@ -34,8 +35,12 @@ public class InformationCollector {
 	            p.waitFor();
 	            
 	            if(p.exitValue() == returnValues.NORMAL.getCode()){
-	            	//Normal termination
-	            	normalTermination++;
+	            	String text = readString(p.getInputStream());
+	            	
+	            	if(text.contains("0123456789"))
+	            		normalTermination++;
+	            	else
+	            		silentDataCorruption++;
 	            }else if(p.exitValue() == returnValues.JAVAFAULT.getCode()){
 	            	//Something went wrong
 	            	errorText = readString(p.getErrorStream());
@@ -65,7 +70,7 @@ public class InformationCollector {
         }
         
         System.out.println("Information of execution termination:\n");
-        System.out.println("         Masked Error:\t\t\t\t "                  + normalTermination);
+        System.out.println("         Normal termination:\t\t\t "              + normalTermination);
         System.out.println("         Silent Data Corruption:\t\t "            + silentDataCorruption);
         System.out.println("(TinyVM) Null Reference Exception:\t\t "          + tinyVMNullReferenceException);
         System.out.println("(Java)   Null Pointer Exception:\t\t "            + javaNullPointerException);
@@ -78,7 +83,7 @@ public class InformationCollector {
         
         System.out.println("\n\n Log messages for sources of 'unknown':");
     	for(int i = 0; i < errorList.size(); i++){
-    		System.out.println(i + errorList.get(i));
+    		System.out.println(i+": " + errorList.get(i));
     	}        
     }
 	

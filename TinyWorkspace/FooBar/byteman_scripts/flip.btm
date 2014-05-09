@@ -1,0 +1,16 @@
+RULE Flip Operand Stack
+CLASS dk.aau.d101f14.tinyvm.TinyFrame
+METHOD checkFrame()
+AT EXIT
+BIND count : int = $0.getFaultCounter()
+IF readCounter("faults") == count
+DO $0.tinyVm.flipLocalVariables()
+ENDRULE
+
+RULE Increment Counter
+CLASS dk.aau.d101f14.tinyvm.TinyFrame
+METHOD checkFrame()
+AT ENTRY
+IF TRUE
+DO incrementCounter("faults")
+ENDRULE

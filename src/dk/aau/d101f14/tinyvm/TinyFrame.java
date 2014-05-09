@@ -22,6 +22,11 @@ public class TinyFrame {
 	int codePointerR;
 	HashMap<SimpleEntry<Integer, String>, Integer> localHeapR;
 	
+	public int getFaultCounter(){
+		return tinyVm.getFaultCounter();
+	}
+	
+	
 	public TinyFrame(TinyVM tinyVm, int[] localVariables, TinyMethod method) {
 		this.tinyVm = tinyVm;
 		this.method = method;
