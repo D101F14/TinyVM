@@ -22,6 +22,11 @@ public class TinyVM {
 	TinyObject[] heap;
 	int heapCounter;
 	TinyNativeInterface tni;
+	int numberOfInstructionToInjectFault;
+	
+	public int getFaultCounter(){
+		return this.numberOfInstructionToInjectFault;
+	}
 	
 	public TinyVM() {
 		heap = new TinyObject[1024];
@@ -151,6 +156,8 @@ public class TinyVM {
 		TinyVM tinyVm = new TinyVM();
 		tinyVm.rootDirectory = Paths.get(args[0]).toAbsolutePath().getParent();
 		tinyVm.setDebug(true);
+		
+		tinyVm.numberOfInstructionToInjectFault = Integer.parseInt(args[1]);
 		
 		String className = Paths.get(args[0]).getFileName().toString();
 		tinyVm.loadList.add("Exception");

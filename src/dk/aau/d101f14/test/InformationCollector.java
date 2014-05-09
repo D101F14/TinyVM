@@ -20,42 +20,48 @@ public class InformationCollector {
         int javaArrayIndexOutOfBoundsException = 0;
         int unknown = 0;
 		
-        //Modify this to call the right file
-        ProcessBuilder pb = new ProcessBuilder("java", "-jar", "C:\\Users\\Rune\\workspace\\TestOfExecutables\\bin\\ExecutableTest\\run.jar");
-        pb.redirectErrorStream();
-        try {
-            Process p = pb.start();
-           
-            p.waitFor();
-            
-            if(p.exitValue() == returnValues.NORMAL.getCode()){
-            	//Normal termination
-            	normalTermination++;
-            }else if(p.exitValue() == returnValues.JAVAFAULT.getCode()){
-            	//Something went wrong
-            	errorText = readString(p.getErrorStream());
-                
-                if(errorText.contains("NullPointerException")){
-                	javaNullPointerException++;
-                }else if(errorText.contains("ArrayIndexOutOfBoundsException")){
-                	javaArrayIndexOutOfBoundsException++;
-                }else if(errorText.contains("OutOfMemoryException")){
-                	javaOutOfMemoryException++;
-                }else{
-                	unknown++;
-                	errorList.add(errorText);
-                }
-            }else if(p.exitValue() == returnValues.NULLREF.getCode()){
-            	tinyVMNullReferenceException++;
-            }else if(p.exitValue() == returnValues.OUTOFMEM.getCode()){
-            	tinyVMOutOfMemoryException++;
-            }else if(p.exitValue() == returnValues.DIVBYZERO.getCode()){
-            	tinyVMDivisionByZeroException++;
-            }else if(p.exitValue() == returnValues.FIELD.getCode()){
-            	tinyVMInvalidField++;
-            }
-        } catch (Exception exp) {
-            exp.printStackTrace();
+        String pathToRootDirectoryForVM = args[0];
+        String pathToVMJarFile = args[1];
+        String pathToScript = args[2];
+        int numberOfTimesToRun = Integer.parseInt(args[3]);
+        
+        for(int i = 0; i < numberOfTimesToRun;i++){
+	        ProcessBuilder pb = new ProcessBuilder("java", "-javaagent:%BYTEMAN_HOME%\\lib\\byteman.jar=script:"+pathToScript, "-jar", pathToVMJarFile, pathToRootDirectoryForVM, ""+i);
+	        pb.redirectErrorStream();
+	        try {
+	            Process p = pb.start();
+	           
+	            p.waitFor();
+	            
+	            if(p.exitValue() == returnValues.NORMAL.getCode()){
+	            	//Normal termination
+	            	normalTermination++;
+	            }else if(p.exitValue() == returnValues.JAVAFAULT.getCode()){
+	            	//Something went wrong
+	            	errorText = readString(p.getErrorStream());
+	                
+	                if(errorText.contains("NullPointerException")){
+	                	javaNullPointerException++;
+	                }else if(errorText.contains("ArrayIndexOutOfBoundsException")){
+	                	javaArrayIndexOutOfBoundsException++;
+	                }else if(errorText.contains("OutOfMemoryException")){
+	                	javaOutOfMemoryException++;
+	                }else{
+	                	unknown++;
+	                	errorList.add(errorText);
+	                }
+	            }else if(p.exitValue() == returnValues.NULLREF.getCode()){
+	            	tinyVMNullReferenceException++;
+	            }else if(p.exitValue() == returnValues.OUTOFMEM.getCode()){
+	            	tinyVMOutOfMemoryException++;
+	            }else if(p.exitValue() == returnValues.DIVBYZERO.getCode()){
+	            	tinyVMDivisionByZeroException++;
+	            }else if(p.exitValue() == returnValues.FIELD.getCode()){
+	            	tinyVMInvalidField++;
+	            }
+	        } catch (Exception exp) {
+	            exp.printStackTrace();
+	        }  
         }
         
         System.out.println("Information of execution termination:\n");
@@ -68,7 +74,7 @@ public class InformationCollector {
         System.out.println("(TinyVM) Division By Zero Exception:\t\t "        + tinyVMDivisionByZeroException);
         System.out.println("(TinyVM) Invalid Field:\t\t\t\t "                 + tinyVMInvalidField);
         System.out.println("(Java)   Array Index Out Of Bounds Exception:\t " + javaArrayIndexOutOfBoundsException);
-        System.out.println("         Unknown:\t\t\t\t "                       + unknown);
+        System.out.println("(Java)   Unknown:\t\t\t\t "                       + unknown);
         
         System.out.println("\n\n Log messages for sources of 'unknown':");
     	for(int i = 0; i < errorList.size(); i++){
