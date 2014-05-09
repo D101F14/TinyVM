@@ -233,6 +233,11 @@
 				"invokevirtual 17",
 				"load REF 1",
 				"new 0",
+				"dup",
+				"store REF 2",
+				"invokevirtual 28",
+				"load REF 1",
+				"load REF 2",
 				"invokevirtual 23",
 				"return VOID"
             ]
@@ -264,21 +269,21 @@
 		{
             "method_descriptor": 28,
             "max_stack": 10,
-            "max_locals": 4,
+            "max_locals": 6,
             "code": [
+				"push INT 1",
 				"load REF 1",
 				"getfield 26",
+				"comp SUB",
 				"dup",
 				"store INT 2",
-				"push INT 1",
-				"if EQUALS RETURN",
+				"push INT 0",
+				"if EQUALS 199",
 				"push INT 0",
 				"store INT 3",
-				SUBSORT
 				"load INT 3",
 				"store INT 4",
-				INSERT
-				"load INT 4"
+				"load INT 4",
 				"push INT 1",
 				"comp ADD",
 				"load REF 1",
@@ -288,9 +293,7 @@
 				"load REF 1",
 				"invokevirtual 13",
 				"comp SUB",
-				"if LT INCREMENT",
-				
-				SWAP
+				"if LT 173",
 				"load INT 4",
 				"load REF 1",
 				"invokevirtual 13",
@@ -309,28 +312,21 @@
 				"comp ADD",
 				"load REF 1",
 				"invokevirtual 15",
-				
-				DECREMENT
-				"push INT 1",
-				"load 4",
-				"comp SUB",
-				"store INT 4",
-				
 				"load INT 4",
 				"push INT 0",
-				"if NEQAULS INSERT",
-				
-				INCREMENT
+				"if EQUALS 173",
+				"push INT 1",
+				"load INT 4",
+				"comp SUB",
+				"store INT 4",
+				"goto 42",
 				"load INT 3",
 				"push INT 1",
 				"comp ADD",
 				"store INT 3",
-				
 				"load INT 3",
 				"load INT 2",
-				"if NEQUALS SUBSORT",
-				
-				RETURN
+				"if NEQUALS 34",
 				"return VOID"
 			]
 		}
