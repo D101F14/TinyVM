@@ -22,8 +22,8 @@ public class TinyFrame {
 	int codePointerR;
 	HashMap<SimpleEntry<Integer, String>, Integer> localHeapR;
 	
-	public int getFaultCounter(){
-		return tinyVm.getFaultCounter();
+	private int getRandomInt(){
+		return (int)(Math.random()*100);
 	}
 	
 	

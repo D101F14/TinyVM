@@ -38,38 +38,53 @@ public class InformationCollector {
 	            	String text = readString(p.getInputStream());
 	            	
 	            	if(text.contains("0123456789"))
+	            	{
 	            		normalTermination++;
-	            	else
+	            		errorList.add("Normal termination:\n"+text);
+	            	}else{
 	            		silentDataCorruption++;
+	            		errorList.add("Silent data corruption:\n"+text);
+	            	}
 	            }else if(p.exitValue() == returnValues.JAVAFAULT.getCode()){
-	            	//Something went wrong
 	            	errorText = readString(p.getErrorStream());
 	                
 	                if(errorText.contains("NullPointerException")){
 	                	javaNullPointerException++;
+	                	errorList.add("Java crash (Null pointer):\n"+readString(p.getInputStream())+"\n"+errorText);
 	                }else if(errorText.contains("ArrayIndexOutOfBoundsException")){
 	                	javaArrayIndexOutOfBoundsException++;
+	                	errorList.add("Java crash (Array index out of bounds):\n"+readString(p.getInputStream())+"\n"+errorText);
 	                }else if(errorText.contains("OutOfMemoryException")){
 	                	javaOutOfMemoryException++;
+	                	errorList.add("Java crash (Out of memory):\n"+readString(p.getInputStream())+"\n"+errorText);
 	                }else{
 	                	unknown++;
-	                	errorList.add(errorText);
+	                	errorList.add("Java crash (unknown):\n"+errorText);
 	                }
 	            }else if(p.exitValue() == returnValues.NULLREF.getCode()){
 	            	tinyVMNullReferenceException++;
+	            	errorList.add("TinyVm unhandled exception (Null reference):\n"+readString(p.getInputStream()));
 	            }else if(p.exitValue() == returnValues.OUTOFMEM.getCode()){
 	            	tinyVMOutOfMemoryException++;
+	            	errorList.add("TinyVm unhandled exception (Out of memory):\n"+readString(p.getInputStream()));
 	            }else if(p.exitValue() == returnValues.DIVBYZERO.getCode()){
 	            	tinyVMDivisionByZeroException++;
+	            	errorList.add("TinyVm unhandled exception (Division by zero):\n"+readString(p.getInputStream()));
 	            }else if(p.exitValue() == returnValues.FIELD.getCode()){
 	            	tinyVMInvalidField++;
+	            	errorList.add("TinyVm undefined field access:\n"+readString(p.getInputStream()));
 	            }
 	        } catch (Exception exp) {
 	            exp.printStackTrace();
 	        }  
         }
         
-        System.out.println("Information of execution termination:\n");
+        System.out.println("Output for the individual runs:");
+    	for(int i = 0; i < errorList.size(); i++){
+    		System.out.println("\nRun "+(i+1)+" - " + errorList.get(i));
+    	}
+        
+        System.out.println("\nTotal count of termination status:\n");
         System.out.println("         Normal termination:\t\t\t "              + normalTermination);
         System.out.println("         Silent Data Corruption:\t\t "            + silentDataCorruption);
         System.out.println("(TinyVM) Null Reference Exception:\t\t "          + tinyVMNullReferenceException);
@@ -79,12 +94,7 @@ public class InformationCollector {
         System.out.println("(TinyVM) Division By Zero Exception:\t\t "        + tinyVMDivisionByZeroException);
         System.out.println("(TinyVM) Invalid Field:\t\t\t\t "                 + tinyVMInvalidField);
         System.out.println("(Java)   Array Index Out Of Bounds Exception:\t " + javaArrayIndexOutOfBoundsException);
-        System.out.println("(Java)   Unknown:\t\t\t\t "                       + unknown);
-        
-        System.out.println("\n\n Log messages for sources of 'unknown':");
-    	for(int i = 0; i < errorList.size(); i++){
-    		System.out.println(i+": " + errorList.get(i));
-    	}        
+        System.out.println("(Java)   Unknown:\t\t\t\t "                       + unknown);        
     }
 	
 	private static String readString(InputStream is){
