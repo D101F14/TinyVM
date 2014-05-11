@@ -27,7 +27,7 @@ public class InformationCollector {
         String byteManPath = args[4];
         
         for(int i = 0; i < numberOfTimesToRun;i++){
-	        ProcessBuilder pb = new ProcessBuilder("java", "-javaagent:"+byteManPath +"\\lib\\byteman.jar=script:"+pathToScript, "-jar", pathToVMJarFile, pathToRootDirectoryForVM, ""+i);
+	        ProcessBuilder pb = new ProcessBuilder("java", "-javaagent:"+byteManPath +"\\lib\\byteman.jar=script:"+pathToScript, "-jar", pathToVMJarFile, pathToRootDirectoryForVM);
 	        pb.redirectErrorStream();
 	        try {
 	            Process p = pb.start();
@@ -59,7 +59,7 @@ public class InformationCollector {
 	                	errorList.add("Java crash (Out of memory):\n"+readString(p.getInputStream())+"\n"+errorText);
 	                }else{
 	                	unknown++;
-	                	errorList.add("Java crash (unknown):\n"+errorText);
+	                	errorList.add("Java crash (unknown):\n"+readString(p.getInputStream())+"\n"+errorText);
 	                }
 	            }else if(p.exitValue() == returnValues.NULLREF.getCode()){
 	            	tinyVMNullReferenceException++;
