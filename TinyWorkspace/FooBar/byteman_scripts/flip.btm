@@ -2,8 +2,8 @@ RULE Flip Random Element Execute
 CLASS dk.aau.d101f14.tinyvm.TinyFrame
 METHOD execute()
 AT EXIT
-BIND random : int = $0.getRandomInt()
-IF 95 <= random AND
+BIND random : int = $0.getRandomInt(7000)
+IF 6999 <= random AND
    readCounter("faults") == 0 AND
    $0.tinyVm.flipRandom()
 DO incrementCounter("faults")
@@ -13,8 +13,8 @@ RULE Flip Random Element CheckFrame
 CLASS dk.aau.d101f14.tinyvm.TinyFrame
 METHOD checkFrame()
 AT EXIT
-BIND random : int = $0.getRandomInt()
-IF 95 <= random AND
+BIND random : int = $0.getRandomInt(7000)
+IF 6999 <= random AND
    readCounter("faults") == 0 AND
    $0.tinyVm.flipRandom()
 DO incrementCounter("faults")   

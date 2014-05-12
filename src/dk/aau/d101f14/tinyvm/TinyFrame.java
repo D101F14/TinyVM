@@ -26,6 +26,10 @@ public class TinyFrame {
 		return (int)(Math.random()*100);
 	}
 	
+	private int getRandomInt(int span){
+		return (int)(Math.random()*span);
+	}
+	
 	
 	public TinyFrame(TinyVM tinyVm, int[] localVariables, TinyMethod method) {
 		this.tinyVm = tinyVm;

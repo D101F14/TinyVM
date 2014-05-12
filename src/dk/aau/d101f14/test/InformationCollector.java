@@ -30,6 +30,7 @@ public class InformationCollector {
 	        ProcessBuilder pb = new ProcessBuilder("java", "-javaagent:"+byteManPath +"\\lib\\byteman.jar=script:"+pathToScript, "-jar", pathToVMJarFile, pathToRootDirectoryForVM);
 	        pb.redirectErrorStream();
 	        try {
+	        	System.out.println((i * 100 / numberOfTimesToRun) + "%");
 	            Process p = pb.start();
 	           
 	            p.waitFor();
@@ -74,6 +75,7 @@ public class InformationCollector {
 	            	tinyVMInvalidField++;
 	            	errorList.add("TinyVm undefined field access:\n"+readString(p.getInputStream()));
 	            }
+	            p.destroy();
 	        } catch (Exception exp) {
 	            exp.printStackTrace();
 	        }  
