@@ -28,11 +28,18 @@ public class InformationCollector {
         int numberOfTimesToRun = Integer.parseInt(args[3]);
         String byteManPath = args[4];
         
+        int progress = 0;
+        int tempProgress = 0;
+        
         for(int i = 0; i < numberOfTimesToRun;i++){
 	        ProcessBuilder pb = new ProcessBuilder("java", "-javaagent:"+byteManPath +"\\lib\\byteman.jar=script:"+pathToScript, "-jar", pathToVMJarFile, pathToRootDirectoryForVM);
 	        pb.redirectErrorStream();
 	        try {
-	        	System.out.println((i * 100 / numberOfTimesToRun) + "%");
+	        	tempProgress = i * 100 / numberOfTimesToRun;
+	        	if(tempProgress/5 > progress/5){
+	        		progress = tempProgress;
+	        		System.out.println(progress + "%");
+	        	}
 	            Process p = pb.start();
 	           
 	            p.waitFor();
