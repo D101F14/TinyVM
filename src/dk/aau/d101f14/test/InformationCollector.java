@@ -19,6 +19,8 @@ public class InformationCollector {
         int tinyVMInvalidField = 0;
         int javaArrayIndexOutOfBoundsException = 0;
         int unknown = 0;
+        int masked = 0;
+        int correctRecovery = 0;
 		
         String pathToRootDirectoryForVM = args[0];
         String pathToVMJarFile = args[1];
@@ -38,8 +40,13 @@ public class InformationCollector {
 	            if(p.exitValue() == returnValues.NORMAL.getCode()){
 	            	String text = readString(p.getInputStream());
 	            	
-	            	if(text.contains("0123456789"))
-	            	{
+	            	if(text.contains("0123456789") && text.contains("ROLLBACK")){
+	            		correctRecovery++;
+	            		errorList.add("Recovery:\n"+text);
+	            	}else if(text.contains("0123456789") && text.contains("After instruction") && !text.contains("ROLLBACK")){
+	            		masked++;
+	            		errorList.add("Masked:\n"+text);
+	            	}else if(text.contains("0123456789") && !text.contains("After instruction")){
 	            		normalTermination++;
 	            		errorList.add("Normal termination:\n"+text);
 	            	}else{
@@ -88,6 +95,8 @@ public class InformationCollector {
         
         System.out.println("\nTotal count of termination status:\n");
         System.out.println("         Normal termination:\t\t\t "              + normalTermination);
+        System.out.println("         Recovery:\t\t\t\t "                      + correctRecovery);
+        System.out.println("         Masked:\t\t\t\t "                        + masked);
         System.out.println("         Silent Data Corruption:\t\t "            + silentDataCorruption);
         System.out.println("(TinyVM) Null Reference Exception:\t\t "          + tinyVMNullReferenceException);
         System.out.println("(Java)   Null Pointer Exception:\t\t "            + javaNullPointerException);
