@@ -112,8 +112,7 @@ public class InformationCollector {
 	            if(faultList.containsKey(flip+","+fault)){
 	            	count = faultList.get(flip+","+fault).intValue();
 	            }
-	            System.out.println(count);
-	            faultList.put(flip+","+fault, new Integer(count++));
+	            faultList.put(flip+","+fault, new Integer(++count));
 	            
 	            p.destroy();
 	        } catch (Exception exp) {
@@ -149,6 +148,14 @@ public class InformationCollector {
         String lh_r = "\nTermination by bitflip in the Local Heap R:\n";
         String lv = "\nTermination by bitflip in the Local Variables:\n";
         String lv_r = "\nTermination by bitflip in the Local Variables R:\n";
+        boolean printOS = false;
+        boolean printOS_R = false;
+        boolean printPC = false;
+        boolean printPC_R = false;
+        boolean printLH = false;
+        boolean printLH_R = false;
+        boolean printLV = false;
+        boolean printLV_R = false;
         
         for(Entry<String, Integer> entry : faultList.entrySet()){
         	
@@ -160,33 +167,57 @@ public class InformationCollector {
         	switch(flip){
         	case "OS":
         		os += "\t"+fault+": "+entry.getValue().intValue() + "\n";
+        		printOS = true;
         		break;
         	case "OS_R":
         		os_r += "\t"+fault+": "+entry.getValue().intValue() + "\n";
+        		printOS_R = true;
         		break;
         	case "PC":
         		pc += "\t"+fault+": "+entry.getValue().intValue() + "\n";
+        		printPC = true;
         		break;
         	case "PC_R":
         		pc_r += "\t"+fault+": "+entry.getValue().intValue() + "\n";
+        		printPC_R = true;
         		break;
         	case "LH":
         		lh += "\t"+fault+": "+entry.getValue().intValue() + "\n";
+        		printLH = true;
         		break;
         	case "LH_R":
         		lh_r += "\t"+fault+": "+entry.getValue().intValue() + "\n";
+        		printLH_R = true;
         		break;
         	case "LV":
         		lv += "\t"+fault+": "+entry.getValue().intValue() + "\n";
+        		printLV = true;
         		break;
         	case "LV_R":
         		lv_r += "\t"+fault+": "+entry.getValue().intValue() + "\n";
+        		printLV_R = true;
         		break;
         	default:
         		break;
         	}        	
         }
-        System.out.println(os + os_r + pc + pc_r + lh + lh_r + lv + lv_r);
+        
+        if(printOS)
+        	System.out.println(os);
+        if(printOS_R)
+        	System.out.println(os_r);
+        if(printPC)
+        	System.out.println(pc);
+        if(printPC_R)
+        	System.out.println(pc_r);
+        if(printLH)
+        	System.out.println(lh);
+        if(printLH_R)
+        	System.out.println(lh_r);
+        if(printLV)
+        	System.out.println(lv);
+        if(printLV_R)
+        	System.out.println(lv_r);
     }
 	
 	private static String readString(InputStream is){
