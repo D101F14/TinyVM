@@ -3,12 +3,15 @@ package dk.aau.d101f14.test;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map.Entry;
 
 public class InformationCollector {
 	
 	public static void main(String[] args) {
 		String errorText = "";
 		ArrayList<String> errorList = new ArrayList<String>();
+		HashMap<String,Integer> faultList = new HashMap<String,Integer>();
 		int normalTermination = 0;
         int silentDataCorruption = 0;
         int tinyVMNullReferenceException = 0;
@@ -44,51 +47,74 @@ public class InformationCollector {
 	           
 	            p.waitFor();
 	            
+	            String output = readString(p.getInputStream());
+	            String flip = identifyFault(output);
+	            String fault = "";
+	            int count = 0;
+	            
 	            if(p.exitValue() == returnValues.NORMAL.getCode()){
-	            	String text = readString(p.getInputStream());
-	            	
-	            	if(text.contains("0123456789") && text.contains("ROLLBACK")){
+	            	if(output.contains("0123456789") && output.contains("ROLLBACK")){
 	            		correctRecovery++;
-	            		errorList.add("Recovery:\n"+text);
-	            	}else if(text.contains("0123456789") && text.contains("After instruction") && !text.contains("ROLLBACK")){
+	            		fault = "Recovery";
+	            		errorList.add(fault+"\n"+output);
+	            	}else if(output.contains("0123456789") && output.contains("After instruction") && !output.contains("ROLLBACK")){
 	            		masked++;
-	            		errorList.add("Masked:\n"+text);
-	            	}else if(text.contains("0123456789") && !text.contains("After instruction")){
+	            		fault = "Masked";
+	            		errorList.add("Masked:\n"+output);
+	            	}else if(output.contains("0123456789") && !output.contains("After instruction")){
 	            		normalTermination++;
-	            		errorList.add("Normal termination:\n"+text);
+	            		fault = "Normal termination";
+	            		errorList.add("Normal termination:\n"+output);
 	            	}else{
 	            		silentDataCorruption++;
-	            		errorList.add("Silent data corruption:\n"+text);
+	            		fault = "Silent data corruption";
+	            		errorList.add("Silent data corruption:\n"+output);
 	            	}
 	            }else if(p.exitValue() == returnValues.JAVAFAULT.getCode()){
 	            	errorText = readString(p.getErrorStream());
 	                
 	                if(errorText.contains("NullPointerException")){
 	                	javaNullPointerException++;
-	                	errorList.add("Java crash (Null pointer):\n"+readString(p.getInputStream())+"\n"+errorText);
+	                	fault = "Java crash (Null pointer)";
+	                	errorList.add("Java crash (Null pointer):\n"+output+"\n"+errorText);
 	                }else if(errorText.contains("ArrayIndexOutOfBoundsException")){
 	                	javaArrayIndexOutOfBoundsException++;
-	                	errorList.add("Java crash (Array index out of bounds):\n"+readString(p.getInputStream())+"\n"+errorText);
+	                	fault = "Java crash (Array index out of bounds)";
+	                	errorList.add("Java crash (Array index out of bounds):\n"+output+"\n"+errorText);
 	                }else if(errorText.contains("OutOfMemoryException")){
 	                	javaOutOfMemoryException++;
-	                	errorList.add("Java crash (Out of memory):\n"+readString(p.getInputStream())+"\n"+errorText);
+	                	fault = "Java crash (Out of memory)";
+	                	errorList.add("Java crash (Out of memory):\n"+output+"\n"+errorText);
 	                }else{
 	                	unknown++;
-	                	errorList.add("Java crash (unknown):\n"+readString(p.getInputStream())+"\n"+errorText);
+	                	fault = "Unknown";
+	                	errorList.add("Java crash (unknown):\n"+output+"\n"+errorText);
 	                }
 	            }else if(p.exitValue() == returnValues.NULLREF.getCode()){
 	            	tinyVMNullReferenceException++;
-	            	errorList.add("TinyVm unhandled exception (Null reference):\n"+readString(p.getInputStream()));
+	            	fault = "TinyVm unhandled exception (Null reference)";
+	            	errorList.add("TinyVm unhandled exception (Null reference):\n"+output);
 	            }else if(p.exitValue() == returnValues.OUTOFMEM.getCode()){
 	            	tinyVMOutOfMemoryException++;
-	            	errorList.add("TinyVm unhandled exception (Out of memory):\n"+readString(p.getInputStream()));
+	            	fault = "TinyVm unhandled exception (Out of memory)";
+	            	errorList.add("TinyVm unhandled exception (Out of memory):\n"+output);
 	            }else if(p.exitValue() == returnValues.DIVBYZERO.getCode()){
 	            	tinyVMDivisionByZeroException++;
-	            	errorList.add("TinyVm unhandled exception (Division by zero):\n"+readString(p.getInputStream()));
+	            	fault = "TinyVm unhandled exception (Division by zero)";
+	            	errorList.add("TinyVm unhandled exception (Division by zero):\n"+output);
 	            }else if(p.exitValue() == returnValues.FIELD.getCode()){
 	            	tinyVMInvalidField++;
-	            	errorList.add("TinyVm undefined field access:\n"+readString(p.getInputStream()));
+	            	fault = "TinyVm undefined field access";
+	            	errorList.add("TinyVm undefined field access:\n"+output);
 	            }
+	            
+	            
+	            if(faultList.containsKey(flip+","+fault)){
+	            	count = faultList.get(flip+","+fault).intValue();
+	            }
+	            System.out.println(count);
+	            faultList.put(flip+","+fault, new Integer(count++));
+	            
 	            p.destroy();
 	        } catch (Exception exp) {
 	            exp.printStackTrace();
@@ -112,7 +138,55 @@ public class InformationCollector {
         System.out.println("(TinyVM) Division By Zero Exception:\t\t "        + tinyVMDivisionByZeroException);
         System.out.println("(TinyVM) Invalid Field:\t\t\t\t "                 + tinyVMInvalidField);
         System.out.println("(Java)   Array Index Out Of Bounds Exception:\t " + javaArrayIndexOutOfBoundsException);
-        System.out.println("(Java)   Unknown:\t\t\t\t "                       + unknown);        
+        System.out.println("(Java)   Unknown:\t\t\t\t "                       + unknown);
+        
+        
+        String os = "\nTermination by bitflip on the Operand Stack:\n";
+        String os_r = "\nTermination by bitflip on the Operand Stack R:\n";
+        String pc = "\nTermination by bitflip in the Program Counter:\n";
+        String pc_r = "\nTermination by bitflip on the Program Counter R:\n";
+        String lh = "\nTermination by bitflip in the Local Heap:\n";
+        String lh_r = "\nTermination by bitflip in the Local Heap R:\n";
+        String lv = "\nTermination by bitflip in the Local Variables:\n";
+        String lv_r = "\nTermination by bitflip in the Local Variables R:\n";
+        
+        for(Entry<String, Integer> entry : faultList.entrySet()){
+        	
+        	String[] split = entry.getKey().split(",");
+        	
+        	String flip = split[0];
+        	String fault = split[1];
+        	
+        	switch(flip){
+        	case "OS":
+        		os += "\t"+fault+": "+entry.getValue().intValue() + "\n";
+        		break;
+        	case "OS_R":
+        		os_r += "\t"+fault+": "+entry.getValue().intValue() + "\n";
+        		break;
+        	case "PC":
+        		pc += "\t"+fault+": "+entry.getValue().intValue() + "\n";
+        		break;
+        	case "PC_R":
+        		pc_r += "\t"+fault+": "+entry.getValue().intValue() + "\n";
+        		break;
+        	case "LH":
+        		lh += "\t"+fault+": "+entry.getValue().intValue() + "\n";
+        		break;
+        	case "LH_R":
+        		lh_r += "\t"+fault+": "+entry.getValue().intValue() + "\n";
+        		break;
+        	case "LV":
+        		lv += "\t"+fault+": "+entry.getValue().intValue() + "\n";
+        		break;
+        	case "LV_R":
+        		lv_r += "\t"+fault+": "+entry.getValue().intValue() + "\n";
+        		break;
+        	default:
+        		break;
+        	}        	
+        }
+        System.out.println(os + os_r + pc + pc_r + lh + lh_r + lv + lv_r);
     }
 	
 	private static String readString(InputStream is){
@@ -128,6 +202,29 @@ public class InformationCollector {
             sb.append(exp.getMessage());
         }
         return sb.toString();
+	}
+	
+	private static String identifyFault(String text){
+		
+		if(text.contains("After instruction") && text.contains("OS") && !text.contains("OS_R")){
+			return "OS";
+		}else if(text.contains("After instruction") && text.contains("OS_R")){
+			return "OS_R";
+		}else if(text.contains("After instruction") && text.contains("Program Counter") && !text.contains("Program Counter R")){
+			return "PC";
+		}else if(text.contains("After instruction") && text.contains("Program Counter R")){
+			return "PC_R";
+		}else if(text.contains("After instruction") && text.contains("Local Heap") && !text.contains("Local Heap R")){
+			return "LH";
+		}else if(text.contains("After instruction") && text.contains("Local Heap R")){
+			return "LH_R";
+		}else if(text.contains("After instruction") && text.contains("Local Variables") && !text.contains("Local Variables R")){
+			return "LV";
+		}else if(text.contains("After instruction") && text.contains("Local Variables R")){
+			return "LV_R";
+		}
+		
+		return "";
 	}
 	
 	
