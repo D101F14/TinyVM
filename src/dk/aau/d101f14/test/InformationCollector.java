@@ -9,7 +9,6 @@ import java.util.Map.Entry;
 public class InformationCollector {
 	
 	public static void main(String[] args) {
-		String errorText = "";
 		ArrayList<String> errorList = new ArrayList<String>();
 		HashMap<String,Integer> faultList = new HashMap<String,Integer>();
 		int normalTermination = 0;
@@ -44,10 +43,18 @@ public class InformationCollector {
 	        		System.out.println(progress + "%");
 	        	}
 	            Process p = pb.start();
-	           
+	            
+	            StreamGobbler errorGobbler = new StreamGobbler(p.getErrorStream(),"");
+	            StreamGobbler outputGobbler = new StreamGobbler(p.getInputStream(),"");
+	            
+	            errorGobbler.start();
+	            outputGobbler.start();
+	            
 	            p.waitFor();
 	            
-	            String output = readString(p.getInputStream());
+	            String errorText = errorGobbler.getString();
+	            String output = outputGobbler.getString();	            
+	            
 	            String flip = identifyFault(output);
 	            String fault = "";
 	            int count = 0;
@@ -70,9 +77,7 @@ public class InformationCollector {
 	            		fault = "Silent data corruption";
 	            		errorList.add("Silent data corruption:\n"+output);
 	            	}
-	            }else if(p.exitValue() == returnValues.JAVAFAULT.getCode()){
-	            	errorText = readString(p.getErrorStream());
-	                
+	            }else if(p.exitValue() == returnValues.JAVAFAULT.getCode()){           
 	                if(errorText.contains("NullPointerException")){
 	                	javaNullPointerException++;
 	                	fault = "Java crash (Null pointer)";
