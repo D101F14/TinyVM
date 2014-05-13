@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Stack;
@@ -221,23 +222,35 @@ public class TinyVM {
 	
 	private boolean flipOperandStack(){
 		
-		TinyFrame current = this.getCallStack().get((int)(Math.random() * (this.getCallStack().size()-1)));
-		
-		if(current.operandStack.size() > 0)
-		{
-			int element = (int)(Math.random() * (current.operandStack.size()-1));
-			int bit = (int)(Math.random() * 7);
-			int val = current.operandStack.get(element).intValue();
-			int temp = val;
-			val ^= 1 << bit;
-			current.operandStack.set(element, new Integer(val));
-			System.out.println("After instruction " + this.instructionCounter +" element "+ element + " was changed from " + temp + " to " + val + " on the OS. Bit " + bit + " was flipped.");
-			
-			return true;
-		}else{
-			System.out.println("Trying to flip element on OS after instruction " + this.instructionCounter + ", but is empty");
-			return false;
+		int numFrames = this.getCallStack().size();
+		ArrayList<Integer> indexes = new ArrayList<>();
+		for (int i = 0; i < numFrames; i++) {
+			indexes.add(i);
 		}
+		Collections.shuffle(indexes);
+		
+		TinyFrame current;
+		
+		for (Integer index : indexes) {
+			current = this.getCallStack().get(index);
+			
+			if(current.operandStack.size() > 0)
+			{
+				int element = (int)(Math.random() * (current.operandStack.size()-1));
+				int bit = (int)(Math.random() * 7);
+				int val = current.operandStack.get(element).intValue();
+				int temp = val;
+				val ^= 1 << bit;
+				current.operandStack.set(element, new Integer(val));
+				System.out.println("After instruction " + this.instructionCounter +" element "+ element + " was changed from " + temp + " to " + val + " on the OS. Bit " + bit + " was flipped.");
+				
+				return true;
+			}else{
+				System.out.println("Trying to flip element on OS in frame " + index + " after instruction " + this.instructionCounter + ", but is empty");
+			}
+		}
+		System.out.println("Apparently all stacks were empty");
+		return false;
 	}
 	
 	private void flipOperandStack(int frameToFlip,int elementToFlip,int value){
@@ -255,22 +268,36 @@ public class TinyVM {
 	}
 	
 	private boolean flipOperandStackR(){
-		TinyFrame current = this.getCallStack().get((int)(Math.random() * (this.getCallStack().size()-1)));
-		if(current.operandStackR.size() > 0)
-		{
-			int element = (int)(Math.random() * (current.operandStackR.size()-1));
-			int bit = (int)(Math.random() * 7);
-			int val = current.operandStackR.get(element).intValue();
-			int temp = val;
-			val ^= 1 << bit;
-			current.operandStackR.set(element, new Integer(val));
-			System.out.println("After instruction " + this.instructionCounter +" element "+ element + " was changed from " + temp + " to " + val + " on the OS_R. Bit " + bit + " was flipped.");
-			
-			return true;
-		}else{
-			System.out.println("Trying to flip element on OS_R after instruction " + this.instructionCounter + ", but is empty");
-			return false;
+		
+		int numFrames = this.getCallStack().size();
+		ArrayList<Integer> indexes = new ArrayList<>();
+		for (int i = 0; i < numFrames; i++) {
+			indexes.add(i);
 		}
+		Collections.shuffle(indexes);
+		
+		TinyFrame current;
+		
+		for (Integer index : indexes) {
+			current = this.getCallStack().get(index);
+			
+			if(current.operandStackR.size() > 0)
+			{
+				int element = (int)(Math.random() * (current.operandStackR.size()-1));
+				int bit = (int)(Math.random() * 7);
+				int val = current.operandStackR.get(element).intValue();
+				int temp = val;
+				val ^= 1 << bit;
+				current.operandStackR.set(element, new Integer(val));
+				System.out.println("After instruction " + this.instructionCounter +" element "+ element + " was changed from " + temp + " to " + val + " on the OS_R. Bit " + bit + " was flipped.");
+				
+				return true;
+			}else{
+				System.out.println("Trying to flip element on OS_R in frame " + index + " after instruction " + this.instructionCounter + ", but is empty");
+			}
+		}
+		System.out.println("Apparently all stacks were empty");
+		return false;
 	}
 	
 	private void flipOperandStackR(int frameToFlip,int elementToFlip,int value){
