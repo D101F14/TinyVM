@@ -23,7 +23,7 @@ public class TinyVM {
 	TinyObject[] heap;
 	int heapCounter;
 	TinyNativeInterface tni;
-	//int numberOfInstructionToInjectFault;
+	int numberOfInstructionToInjectFault;
 	int instructionCounter = 1;
 	
 	public void incrementInstructionCounter(){
@@ -133,6 +133,7 @@ public class TinyVM {
 			throwException(exception);
 			return;
 		} else {
+			System.out.println("Code pointer:" + this.getCurrentFrame().codePointer +", Code pointer R: " +  this.getCurrentFrame().codePointerR);
 			System.out.println("Unhandled exception: " + exceptionName + ".");
 			switch (exceptionName)
 			{
@@ -159,7 +160,7 @@ public class TinyVM {
 		tinyVm.rootDirectory = Paths.get(args[0]).toAbsolutePath().getParent();
 		tinyVm.setDebug(false);
 		
-		//tinyVm.numberOfInstructionToInjectFault = Integer.parseInt(args[1]);
+		tinyVm.numberOfInstructionToInjectFault = Integer.parseInt(args[1]);
 		
 		String className = Paths.get(args[0]).getFileName().toString();
 		tinyVm.loadList.add("Exception");

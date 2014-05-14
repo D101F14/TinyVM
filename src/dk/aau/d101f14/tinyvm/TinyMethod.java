@@ -12,14 +12,20 @@ public class TinyMethod {
 	byte[] code;
 	int handlerCount;
 	TinyHandler[] handlers;
+	String name;
 	
 	public TinyMethod(TinyClass tinyClass) {
 		this.tinyClass = tinyClass;
 	}
 	
+	public String getMethodName(){
+		return this.name;
+	}
+	
 	public void read(InputStream stream) {
 		try {
 			methodDescriptor = (int)(stream.read() & 0xFF << 8) | (int)(stream.read() & 0xFF);
+			name = ((StringInfo)tinyClass.constantPool[((MethodDescriptorInfo)tinyClass.constantPool[methodDescriptor]).getMethodName()]).getBytesString();
 			maxStack = (int)(stream.read() & 0xFF << 8) | (int)(stream.read() & 0xFF);
 			maxLocals = (int)(stream.read() & 0xFF << 8) | (int)(stream.read() & 0xFF);
 			codeLength = (int)(stream.read() & 0xFF << 8) | (int)(stream.read() & 0xFF);
