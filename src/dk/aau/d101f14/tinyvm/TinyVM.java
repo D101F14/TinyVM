@@ -133,7 +133,6 @@ public class TinyVM {
 			throwException(exception);
 			return;
 		} else {
-			System.out.println("Code pointer:" + this.getCurrentFrame().codePointer +", Code pointer R: " +  this.getCurrentFrame().codePointerR);
 			System.out.println("Unhandled exception: " + exceptionName + ".");
 			switch (exceptionName)
 			{
