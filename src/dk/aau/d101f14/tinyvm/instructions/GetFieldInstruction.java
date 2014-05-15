@@ -32,10 +32,12 @@ public class GetFieldInstruction extends Instruction {
 		FieldDescriptorInfo fieldDescriptor = (FieldDescriptorInfo)tinyVm.getCurrentFrame().getMethod().getTinyClass().getConstantPool()[getAddress()];
 		StringInfo fieldName = (StringInfo)tinyVm.getCurrentFrame().getMethod().getTinyClass().getConstantPool()[fieldDescriptor.getFieldName()];
 		
-		int objectRef = tinyVm.getCurrentFrame().getOperandStack().pop();
-		int objectRefR = tinyVm.getCurrentFrame().getOperandStackR().pop();
+		int objectRef = tinyVm.getCurrentFrame().getOperandStack().peek();
+		int objectRefR = tinyVm.getCurrentFrame().getOperandStackR().peek();
 		
 		if(objectRef > 0 && objectRef < tinyVm.getHeapCounter() && objectRefR > 0 && objectRefR < tinyVm.getHeapCounter()) {
+			tinyVm.getCurrentFrame().getOperandStack().pop();
+			tinyVm.getCurrentFrame().getOperandStackR().pop();
 			Integer field = tinyVm.getCurrentFrame().getLocalHeap().get(new SimpleEntry<Integer, String>(objectRef, fieldName.getBytesString()));
 			if(field == null) {
 					field = tinyVm.getHeap()[objectRef].getFields().get(fieldName.getBytesString());

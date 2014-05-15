@@ -36,10 +36,12 @@ public class PutFieldInstruction extends Instruction {
 		FieldDescriptorInfo fieldDescriptor = (FieldDescriptorInfo)tinyVm.getCurrentFrame().getMethod().getTinyClass().getConstantPool()[getAddress()];
 		StringInfo fieldName = (StringInfo)tinyVm.getCurrentFrame().getMethod().getTinyClass().getConstantPool()[fieldDescriptor.getFieldName()];
 		
-		int objectRef = tinyVm.getCurrentFrame().getOperandStack().pop();
-		int objectRefR = tinyVm.getCurrentFrame().getOperandStackR().pop();
+		int objectRef = tinyVm.getCurrentFrame().getOperandStack().peek();
+		int objectRefR = tinyVm.getCurrentFrame().getOperandStackR().peek();
 
 		if(objectRef > 0 && objectRefR > 0) {
+			tinyVm.getCurrentFrame().getOperandStack().pop();
+			tinyVm.getCurrentFrame().getOperandStackR().pop();
 			tinyVm.getCurrentFrame().getLocalHeap().put(new SimpleEntry<Integer, String>(objectRef, fieldName.getBytesString()), tinyVm.getCurrentFrame().getOperandStack().pop());		
 			tinyVm.getCurrentFrame().getLocalHeapR().put(new SimpleEntry<Integer, String>(objectRefR, fieldName.getBytesString()), tinyVm.getCurrentFrame().getOperandStackR().pop());		
 			
