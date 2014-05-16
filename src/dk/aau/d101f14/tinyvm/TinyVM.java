@@ -15,6 +15,7 @@ import java.util.Stack;
 
 public class TinyVM {
 	boolean debug;
+	boolean performance;
 	
 	HashMap<String, TinyClass> classes;
 	ArrayList<String> loadList;
@@ -40,6 +41,16 @@ public class TinyVM {
 		debug = false;
 		tni = new TinyNativeInterface();
 	}
+	
+	public void setPerformance(boolean b){
+		this.performance = b;
+	}
+	
+	public boolean getPerformance(){
+		return this.performance;
+	}
+	
+	private static final long MEGABYTE = 1024L * 1024L;
 	
 	public void setDebug(boolean debug) {
 		this.debug = debug;
@@ -135,7 +146,6 @@ public class TinyVM {
 			throwException(exception);
 			return;
 		} else {
-			System.out.println("Code pointer:" + this.getCurrentFrame().codePointer +", Code pointer R: " +  this.getCurrentFrame().codePointerR);
 			System.out.println("Unhandled exception: " + exceptionName + ".");
 			switch (exceptionName)
 			{
@@ -163,6 +173,9 @@ public class TinyVM {
 		tinyVm.setDebug(false);
 		
 		tinyVm.checkInstructions = true;
+		
+		tinyVm.setPerformance(false);
+		long startTime = System.currentTimeMillis();
 		
 		tinyVm.numberOfInstructionToInjectFault = Integer.parseInt(args[1]);
 		
@@ -195,6 +208,19 @@ public class TinyVM {
 			tinyVm.getCurrentFrame().execute();
 			tinyVm.incrementInstructionCounter();
 		}
+		
+		if(tinyVm.getPerformance()){
+			long stopTime = System.currentTimeMillis();
+		    long elapsedTime = stopTime - startTime;
+		    
+		    System.out.println("Instructions executed: " + tinyVm.instructionCounter);
+		    System.out.format("Time used: %.3f seconds\n", (double)(elapsedTime/1000.0));
+			
+			Runtime runtime = Runtime.getRuntime();
+			long memory = runtime.totalMemory() - runtime.freeMemory();
+			System.out.format("Memory used: %.3f MB\n",(double)(memory / (double)MEGABYTE));
+		}
+		
 	}
 	
 	
