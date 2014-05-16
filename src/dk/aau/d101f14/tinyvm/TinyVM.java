@@ -221,6 +221,8 @@ public class TinyVM {
 			System.out.format("Memory used: %.3f MB\n",(double)(memory / (double)MEGABYTE));
 		}
 		
+		System.out.print("#");
+		
 	}
 	
 	

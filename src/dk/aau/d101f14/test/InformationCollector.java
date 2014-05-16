@@ -54,28 +54,38 @@ public class InformationCollector {
 	            
 	            String errorText = errorGobbler.getString();
 	            String output = outputGobbler.getString();	            
+	            String returnText = "";
+	            String expectedResult = "0123456789";
+	            
+	            if(output.contains("#")){
+	            	returnText = output.split("#")[1].replace("\n", "");
+	            }
+	            
 	            
 	            String flip = identifyFault(output);
 	            String fault = "";
 	            int count = 0;
 	            
 	            if(p.exitValue() == returnValues.NORMAL.getCode()){
-	            	if(output.contains("0123456789") && output.contains("ROLLBACK")){
+	            	if(returnText.contentEquals(expectedResult) && output.contains("ROLLBACK")){
 	            		correctRecovery++;
 	            		fault = "Recovery";
 	            		errorList.add(fault+"\n"+output);
-	            	}else if(output.contains("0123456789") && output.contains("After instruction") && !output.contains("ROLLBACK")){
+	            	}else if(returnText.contentEquals(expectedResult) && output.contains("After instruction") && !output.contains("ROLLBACK")){
 	            		masked++;
 	            		fault = "Masked";
 	            		errorList.add("Masked:\n"+output);
-	            	}else if(output.contains("0123456789") && !output.contains("After instruction")){
+	            	}else if(returnText.contentEquals(expectedResult) && !output.contains("After instruction") && !output.contains("ROLLBACK")){
 	            		normalTermination++;
-	            		fault = "Normal termination";
-	            		errorList.add("Normal termination:\n"+output);
-	            	}else{
+	            		fault = "No bitflip";
+	            		errorList.add("No bitflip:\n"+output);
+	            	}else if(!returnText.contentEquals(expectedResult) && output.contains("After instruction")){
 	            		silentDataCorruption++;
-	            		fault = "Silent data corruption";
-	            		errorList.add("Silent data corruption:\n"+output);
+	            		fault = "Silent Data Corruption";
+	            		errorList.add("Silent Data Corruption:\n"+output);
+	            	}else{
+	            		System.out.println("No idea what went wrong here:");
+	            		System.out.println(output);
 	            	}
 	            }else if(p.exitValue() == returnValues.JAVAFAULT.getCode()){           
 	                if(errorText.contains("NullPointerException")){
@@ -131,7 +141,7 @@ public class InformationCollector {
     	}
         
         System.out.println("\nTotal count of termination status:\n");
-        System.out.println("         Normal termination:\t\t\t "              + normalTermination);
+        System.out.println("         No bitflip:\t\t\t\t "                    + normalTermination);
         System.out.println("         Recovery:\t\t\t\t "                      + correctRecovery);
         System.out.println("         Masked:\t\t\t\t "                        + masked);
         System.out.println("         Silent Data Corruption:\t\t "            + silentDataCorruption);
