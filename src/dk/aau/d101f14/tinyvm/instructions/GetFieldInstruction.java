@@ -42,10 +42,16 @@ public class GetFieldInstruction extends Instruction {
 			if(field == null) {
 					field = tinyVm.getHeap()[objectRef].getFields().get(fieldName.getBytesString());
 			}
+			if(field == null){
+				field = new Integer(0);
+			}
 			
 			Integer fieldR = tinyVm.getCurrentFrame().getLocalHeapR().get(new SimpleEntry<Integer, String>(objectRefR, fieldName.getBytesString()));
 			if(fieldR == null) {
 					fieldR = tinyVm.getHeap()[objectRefR].getFields().get(fieldName.getBytesString());
+			}
+			if(fieldR == null){
+				fieldR = new Integer(0);
 			}
 
 			tinyVm.getCurrentFrame().getOperandStack().push(new Integer(field.intValue()));
