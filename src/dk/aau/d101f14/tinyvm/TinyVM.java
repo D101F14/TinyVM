@@ -26,6 +26,8 @@ public class TinyVM {
 	int numberOfInstructionToInjectFault;
 	int instructionCounter = 1;
 	
+	boolean checkInstructions = false;
+	
 	public void incrementInstructionCounter(){
 		this.instructionCounter++;
 	}
@@ -159,6 +161,8 @@ public class TinyVM {
 		TinyVM tinyVm = new TinyVM();
 		tinyVm.rootDirectory = Paths.get(args[0]).toAbsolutePath().getParent();
 		tinyVm.setDebug(false);
+		
+		tinyVm.checkInstructions = true;
 		
 		tinyVm.numberOfInstructionToInjectFault = Integer.parseInt(args[1]);
 		
@@ -316,7 +320,7 @@ public class TinyVM {
 	}
 	
 	private boolean flipProgramCounter(){
-		TinyFrame current = this.getCallStack().get((int)(Math.random() * (this.getCallStack().size()-1)));
+		TinyFrame current = this.getCallStack().get((int)(Math.random() * (this.getCallStack().size())));
 		int bit = (int)(Math.random()*15);
 		int pc = current.getCodePointer();
 		int temp = pc;
@@ -336,7 +340,7 @@ public class TinyVM {
 	}
 	
 	private boolean flipProgramCounterR(){
-		TinyFrame current = this.getCallStack().get((int)(Math.random() * (this.getCallStack().size()-1)));
+		TinyFrame current = this.getCallStack().get((int)(Math.random() * (this.getCallStack().size())));
 		int bit = (int)(Math.random()*15);
 		int pcR = current.getCodePointerR();
 		int temp = pcR;

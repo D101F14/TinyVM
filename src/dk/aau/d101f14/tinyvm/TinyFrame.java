@@ -166,6 +166,11 @@ public class TinyFrame {
 	
 	public void execute() {
 		Instruction instruction = null;
+		
+		if(tinyVm.checkInstructions && !(tinyVm.getCurrentFrame().codePointer == tinyVm.getCurrentFrame().codePointerR)){
+			tinyVm.getCurrentFrame().rollback();
+		}
+		
 		OpCode opCode = OpCode.get(method.getCode()[codePointer]);
 		switch(opCode) {
 		case DUP:
