@@ -2,7 +2,9 @@ package dk.aau.d101f14.tinyvm;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.ByteBuffer;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -219,6 +221,14 @@ public class TinyVM {
 			Runtime runtime = Runtime.getRuntime();
 			long memory = runtime.totalMemory() - runtime.freeMemory();
 			System.out.format("Memory used: %.3f MB\n",(double)(memory / (double)MEGABYTE));
+			try{
+				FileWriter writer = new FileWriter("test.txt", true);
+				writer.append("" + (double)(elapsedTime/1000.0) + "\n");
+				writer.close();
+			}catch(IOException e){
+				
+			}
+			
 		}
 		
 		System.out.print("#");

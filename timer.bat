@@ -1,0 +1,1 @@
+FOR /L %%G IN (1,1,100) DO java -jar VM.jar C:\Users\gotler\Documents\GitHub\TinyVM\TinyWorkspace\FooBar\bin\ArrayTest 0
