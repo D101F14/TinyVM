@@ -82,7 +82,7 @@ public class InformationCollector {
 	            		normalTermination++;
 	            		fault = "No bitflip";
 	            		errorList.add("No bitflip:\n"+output);
-	            	}else if(!returnText.contentEquals(expectedResult) && output.contains("After instruction") && output.contains("ROLLBACK")){
+	            	}else if(!returnText.contentEquals(expectedResult) && output.contains("After instruction")){
 	            		silentDataCorruption++;
 	            		fault = "Silent Data Corruption";
 	            		errorList.add("Silent Data Corruption:\n"+output);
