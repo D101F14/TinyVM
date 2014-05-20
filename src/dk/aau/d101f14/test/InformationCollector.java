@@ -34,7 +34,7 @@ public class InformationCollector {
         int tempProgress = 0;
         
         for(int i = 0; i < numberOfTimesToRun;i++){
-	        ProcessBuilder pb = new ProcessBuilder("java", "-javaagent:"+byteManPath +"\\lib\\byteman.jar=script:"+pathToScript, "-jar", pathToVMJarFile, pathToRootDirectoryForVM, ""+(int)(Math.random()*11300));
+	        ProcessBuilder pb = new ProcessBuilder("java", "-javaagent:"+byteManPath +"\\lib\\byteman.jar=script:"+pathToScript, "-jar", pathToVMJarFile, pathToRootDirectoryForVM, ""+(int)(Math.random()*11298));
 	        pb.redirectErrorStream();
 	        try {
 	        	tempProgress = i * 100 / numberOfTimesToRun;
