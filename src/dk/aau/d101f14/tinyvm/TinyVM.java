@@ -222,9 +222,13 @@ public class TinyVM {
 			long memory = runtime.totalMemory() - runtime.freeMemory();
 			System.out.format("Memory used: %.3f MB\n",(double)(memory / (double)MEGABYTE));
 			try{
-				FileWriter writer = new FileWriter("test.txt", true);
-				writer.append("" + (double)(elapsedTime/1000.0) + "\n");
-				writer.close();
+				FileWriter timerFile = new FileWriter("timer.txt", true);
+				timerFile.append("" + (double)(elapsedTime/1000.0) + "\n");
+				timerFile.close();
+
+				FileWriter memFile = new FileWriter("memory.txt", true);
+				memFile.append("" + (double)(memory / (double)MEGABYTE) + "\n");
+				memFile.close();
 			}catch(IOException e){
 				
 			}
@@ -397,7 +401,7 @@ public class TinyVM {
 	}
 	
 	private boolean flipLocalHeap(){
-		TinyFrame current = this.getCallStack().get((int)(Math.random() * (this.getCallStack().size()-1)));
+		TinyFrame current = this.getCallStack().get(this.getCallStack().size()-1);
 		
 		if(current.getLocalHeap().entrySet().size() > 0)
 		{
@@ -505,7 +509,7 @@ public class TinyVM {
 	}
 	
 	private boolean flipLocalHeapR(){
-		TinyFrame current = this.getCallStack().get((int)(Math.random() * (this.getCallStack().size()-1)));
+		TinyFrame current = this.getCallStack().get(this.getCallStack().size()-1);
 		
 		if(current.getLocalHeapR().entrySet().size() > 0)
 		{
