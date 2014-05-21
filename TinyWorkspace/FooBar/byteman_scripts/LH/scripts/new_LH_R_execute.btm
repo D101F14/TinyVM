@@ -1,0 +1,31 @@
+RULE Flip Local Heap R Execute
+CLASS dk.aau.d101f14.tinyvm.TinyFrame
+METHOD execute()
+AT EXIT
+BIND count : int = $0.tinyVm.numberOfInstructionToInjectFault
+IF readCounter("faults") == 0 AND
+   readCounter("instructionCounter") >= count AND
+   $0.tinyVm.flipLocalHeapR()
+DO incrementCounter("faults");
+   traceln("Method is: " +  $0.method.getMethodName() + " and Program Counter is: " + $0.codePointer);
+   $0.tinyVm.setDebug(true)  
+ENDRULE
+
+RULE Increment Counter
+CLASS dk.aau.d101f14.tinyvm.TinyFrame
+METHOD execute()
+AT EXIT
+IF TRUE
+DO incrementCounter("instructionCounter")
+ENDRULE
+
+RULE Disable Debug
+CLASS dk.aau.d101f14.tinyvm.TinyFrame
+METHOD execute()
+AT EXIT
+IF readCounter("faults") == 1 AND
+   readCounter("instructionCounter") > ($0.tinyVm.numberOfInstructionToInjectFault + 20)
+DO traceln("Stop display VM debug!");
+   $0.tinyVm.setDebug(false);
+   incrementCounter("faults")
+ENDRULE
