@@ -174,7 +174,7 @@ public class TinyVM {
 		tinyVm.rootDirectory = Paths.get(args[0]).toAbsolutePath().getParent();
 		tinyVm.setDebug(false);
 		
-		tinyVm.checkInstructions = true;
+		tinyVm.checkInstructions = false;
 		
 		tinyVm.setPerformance(false);
 		long startTime = System.currentTimeMillis();
@@ -242,7 +242,7 @@ public class TinyVM {
 	
 	private boolean flipRandom()
 	{
-		int method = (int)(Math.random()*7);
+		int method = (int)(Math.random()*8);
 		
 		switch(method)
 		{
@@ -293,7 +293,7 @@ public class TinyVM {
 				
 				return true;
 			}else{
-				System.out.println("Trying to flip element on OS in frame " + index + " after instruction " + this.instructionCounter + ", but is empty");
+				System.out.println("Trying to flip element on operand stack in frame " + index + " after instruction " + this.instructionCounter + ", but is empty");
 			}
 		}
 		System.out.println("Apparently all stacks were empty");
@@ -340,7 +340,7 @@ public class TinyVM {
 				
 				return true;
 			}else{
-				System.out.println("Trying to flip element on OS_R in frame " + index + " after instruction " + this.instructionCounter + ", but is empty");
+				System.out.println("Trying to flip element on operand stack R in frame " + index + " after instruction " + this.instructionCounter + ", but is empty");
 			}
 		}
 		System.out.println("Apparently all stacks were empty");
