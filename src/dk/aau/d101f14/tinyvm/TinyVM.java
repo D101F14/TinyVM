@@ -300,17 +300,19 @@ public class TinyVM {
 		return false;
 	}
 	
-	private void flipOperandStack(int frameToFlip,int elementToFlip,int value){
+	private boolean flipOperandStack(int frameToFlip, int elementToFlip, int bit){
 		
 		TinyFrame current = this.getCallStack().get(frameToFlip);
 		
 		if(current.operandStack.size() > 0)
 		{
 			int val = current.operandStack.get(elementToFlip).intValue();
-			current.operandStack.set(elementToFlip, new Integer(value));
-			System.out.println("After instruction " + this.instructionCounter +" element "+ elementToFlip + " was changed from " + val + " to " + value + " on the OS.");
+			current.operandStack.set(elementToFlip, new Integer(val ^ 1 << bit));
+			System.out.println("After instruction " + this.instructionCounter +" element "+ elementToFlip + " was changed from " + val + " to " + (val ^ 1 << bit) + " on the OS.");
+			return true;
 		}else{
 			System.out.println("Trying to flip element on OS after instruction " + this.instructionCounter + ", but is empty");
+			return false;
 		}
 	}
 	
@@ -347,17 +349,19 @@ public class TinyVM {
 		return false;
 	}
 	
-	private void flipOperandStackR(int frameToFlip,int elementToFlip,int value){
+	private boolean flipOperandStackR(int frameToFlip,int elementToFlip,int bit){
 		
 		TinyFrame current = this.getCallStack().get(frameToFlip);
 		
 		if(current.operandStackR.size() > 0)
 		{
 			int val = current.operandStackR.get(elementToFlip).intValue();
-			current.operandStackR.set(elementToFlip, new Integer(value));
-			System.out.println("After instruction " + this.instructionCounter +" element "+ elementToFlip + " was changed from " + val + " to " + value + " on the OS.");
+			current.operandStackR.set(elementToFlip, new Integer(val ^ 1 << bit));
+			System.out.println("After instruction " + this.instructionCounter +" element "+ elementToFlip + " was changed from " + val + " to " + (val ^ 1 << bit) + " on the OS.");
+			return true;
 		}else{
 			System.out.println("Trying to flip element on OS_R after instruction " + this.instructionCounter + ", but is empty");
+			return false;
 		}
 	}
 	
@@ -373,12 +377,13 @@ public class TinyVM {
 		return true;
 	}
 	
-	private void flipProgramCounter(int frameToFlip, int value){
+	private boolean flipProgramCounter(int frameToFlip, int bit){
 		TinyFrame current = this.getCallStack().get(frameToFlip);
 		
 		int pc = current.getCodePointer();
-		current.setCodePointer(value);
-		System.out.println("After instruction " + this.instructionCounter +" Program Counter was flipped from " + pc + " to " + value);
+		current.setCodePointer(pc ^ 1 << bit);
+		System.out.println("After instruction " + this.instructionCounter +" Program Counter was flipped from " + pc + " to " + (pc ^ 1 << bit));
+		return true;
 	}
 	
 	private boolean flipProgramCounterR(){
@@ -393,22 +398,23 @@ public class TinyVM {
 		return true;
 	}
 	
-	private void flipProgramCounterR(int frameToFlip, int value){
+	private boolean flipProgramCounterR(int frameToFlip, int bit){
 		TinyFrame current = this.getCallStack().get(frameToFlip);
-		int pcR = current.getCodePointerR();
-		current.setCodePointerR(value);
-		System.out.println("After instruction " + this.instructionCounter +" Program Counter R was flipped from " + pcR + " to " + value);
+		int pc = current.getCodePointerR();
+		current.setCodePointerR(pc ^ 1 << bit);
+		System.out.println("After instruction " + this.instructionCounter +" Program Counter R was flipped from " + pc + " to " + (pc ^ 1 << bit));
+		return true;
 	}
 	
 	private boolean flipLocalHeap(){
-		TinyFrame current = this.getCallStack().get(this.getCallStack().size()-1);
+		TinyFrame current = this.getCallStack().get(this.getCallStack().size());
 		
 		if(current.getLocalHeap().entrySet().size() > 0)
 		{
 			int mode = (int)(Math.random() * 2);
 			int bit = (int)(Math.random()*15);
 			Entry<SimpleEntry<Integer, String>, Integer> entryElement = null;
-			int element = (int)(Math.random()*(current.getLocalHeap().entrySet().size()-1));
+			int element = (int)(Math.random()*(current.getLocalHeap().entrySet().size()));
 			int i = 0;
 			for(Entry<SimpleEntry<Integer, String>, Integer> entry : current.getLocalHeap().entrySet())
 			{
@@ -434,7 +440,7 @@ public class TinyVM {
 			case 1: //flip field name
 				bit = (int)(Math.random() * 7);
 				byte[] byteString = key.getValue().getBytes();
-				element = (int)(Math.random() * (byteString.length -1));
+				element = (int)(Math.random() * (byteString.length));
 				
 				byte character = byteString[element];
 				character ^= 1 << bit;
@@ -464,7 +470,7 @@ public class TinyVM {
 		}
 	}
 	
-	private void flipLocalHeap(int frameToFlip, int flipMode,int elementToFlip, int value, String strValue){
+	private boolean flipLocalHeap(int frameToFlip, int flipMode,int elementToFlip, int bit, int charToFlip){
 		TinyFrame current = this.getCallStack().get(frameToFlip);
 		
 		if(current.getLocalHeap().entrySet().size() > 0)
@@ -487,24 +493,39 @@ public class TinyVM {
 			{
 			case 0: //flip reference
 				current.getLocalHeap().remove(key);
+				
+				int value = key.getKey() ^ 1 << bit;
+				
 				current.getLocalHeap().put(new SimpleEntry<Integer,String>(new Integer(value),key.getValue()), new Integer(entryElement.getValue().intValue()));
 				System.out.println("After instruction " + this.instructionCounter +" Local Heap entry reference was flipped in " + entryElement.toString() + " to " + value+"="+key.getValue()+"="+entryElement.getValue().intValue());
 				break;
 			case 1: //flip field name				
 				current.getLocalHeap().remove(key);
+				
+				byte[] stringBytes = key.getValue().getBytes();
+				byte flippedChar = stringBytes[charToFlip];
+				flippedChar ^= 1 << bit;
+				stringBytes[charToFlip] = flippedChar;
+				String strValue = new String(stringBytes);
+				
 				current.getLocalHeap().put(new SimpleEntry<Integer,String>(key.getKey(),strValue), new Integer(entryElement.getValue().intValue()));
 				System.out.println("After instruction " + this.instructionCounter +" Local Heap entry fieldname was flipped in " + entryElement.toString() + " to " + key.getKey()+"="+strValue+"="+entryElement.getValue().intValue());
 				break;
 			case 2: //flip value
+				int oldVal = current.getLocalHeap().get(key);
+				oldVal = oldVal ^ 1 << bit;
+				
 				current.getLocalHeap().remove(key);
-				current.getLocalHeap().put(key, new Integer(value));
+				current.getLocalHeap().put(key, new Integer(oldVal));
 				System.out.println("After instruction " + this.instructionCounter +" Local Heap entry value was flipped in " + entryElement.toString() + " to " + current.getLocalHeap().get(key).toString());
 				break;
 			default:
 				break;
 			}
+			return true;
 		}else{
 			System.out.println("Trying to flip element in LH after instruction " + this.instructionCounter + ", but is empty");
+			return false;
 		}
 	}
 	
@@ -572,7 +593,7 @@ public class TinyVM {
 		}
 	}
 	
-	private void flipLocalHeapR(int frameToFlip, int flipMode,int elementToFlip, int value, String strValue){
+	private boolean flipLocalHeapR(int frameToFlip, int flipMode,int elementToFlip, int bit, int charToFlip){
 		TinyFrame current = this.getCallStack().get(frameToFlip);
 		
 		if(current.getLocalHeapR().entrySet().size() > 0)
@@ -595,34 +616,49 @@ public class TinyVM {
 			{
 			case 0: //flip reference
 				current.getLocalHeapR().remove(key);
+				
+				int value = key.getKey() ^ 1 << bit;
+				
 				current.getLocalHeapR().put(new SimpleEntry<Integer,String>(new Integer(value),key.getValue()), new Integer(entryElement.getValue().intValue()));
 				System.out.println("After instruction " + this.instructionCounter +" Local Heap R entry reference was flipped in " + entryElement.toString() + " to " + value+"="+key.getValue()+"="+entryElement.getValue().intValue());
 				break;
 			case 1: //flip field name				
 				current.getLocalHeapR().remove(key);
+				
+				byte[] stringBytes = key.getValue().getBytes();
+				byte flippedChar = stringBytes[charToFlip];
+				flippedChar ^= 1 << bit;
+				stringBytes[charToFlip] = flippedChar;
+				String strValue = new String(stringBytes);
+				
 				current.getLocalHeapR().put(new SimpleEntry<Integer,String>(key.getKey(),strValue), new Integer(entryElement.getValue().intValue()));
 				System.out.println("After instruction " + this.instructionCounter +" Local Heap R entry fieldname was flipped in " + entryElement.toString() + " to " + key.getKey()+"="+strValue+"="+entryElement.getValue().intValue());
 				break;
 			case 2: //flip value
+				int oldVal = current.getLocalHeap().get(key);
+				oldVal = oldVal ^ 1 << bit;
+				
 				current.getLocalHeapR().remove(key);
-				current.getLocalHeapR().put(key, new Integer(value));
+				current.getLocalHeapR().put(key, new Integer(oldVal));
 				System.out.println("After instruction " + this.instructionCounter +" Local Heap R entry value was flipped in " + entryElement.toString() + " to " + current.getLocalHeapR().get(key).toString());
 				break;
 			default:
 				break;
 			}
+			return true;
 		}else{
 			System.out.println("Trying to flip element in LH_R after instruction " + this.instructionCounter + ", but is empty");
+			return false;
 		}
 	}
 	
 	private boolean flipLocalVariables(){
-		TinyFrame current = this.getCallStack().get((int)(Math.random() * (this.getCallStack().size()-1)));
+		TinyFrame current = this.getCallStack().get((int)(Math.random() * (this.getCallStack().size())));
 		
 		if(current.getLocalVariables().length > 0)
 		{
-			int element = (int)(Math.random()*(current.getLocalVariables().length-1));
-			int bit = (int)(Math.random()*15);
+			int element = (int)(Math.random()*(current.getLocalVariables().length));
+			int bit = (int)(Math.random()*16);
 			int val = current.getLocalVariables()[element];
 			int temp = val;
 			val ^= 1 << bit;
@@ -636,26 +672,28 @@ public class TinyVM {
 		}
 	}
 	
-	private void flipLocalVariables(int frameToFlip, int elementToFlip, int value){
+	private boolean flipLocalVariables(int frameToFlip, int elementToFlip, int bit){
 		TinyFrame current = this.getCallStack().get(frameToFlip);
 		
 		if(current.getLocalVariables().length > 0)
 		{
 			int val = current.getLocalVariables()[elementToFlip];
-			current.getLocalVariables()[elementToFlip] = value;
-			System.out.println("After instruction " + this.instructionCounter +" Local Variables index " + elementToFlip  + " was flipped from " + val + " to " + value);
+			current.getLocalVariables()[elementToFlip] = val ^ 1 << bit;
+			System.out.println("After instruction " + this.instructionCounter +" Local Variables index " + elementToFlip  + " was flipped from " + val + " to " + (val ^ 1 << bit));
+			return true;
 		}else{
 			System.out.println("Trying to flip element in LV after instruction " + this.instructionCounter + ", but is empty");
+			return false;
 		}
 	}
 	
 	private boolean flipLocalVariablesR(){
-		TinyFrame current = this.getCallStack().get((int)(Math.random() * (this.getCallStack().size()-1)));
+		TinyFrame current = this.getCallStack().get((int)(Math.random() * (this.getCallStack().size())));
 		
 		if(current.getLocalVariablesR().length > 0)
 		{
-			int element = (int)(Math.random()*(current.getLocalVariablesR().length-1));
-			int bit = (int)(Math.random()*15);
+			int element = (int)(Math.random()*(current.getLocalVariablesR().length));
+			int bit = (int)(Math.random()*16);
 			int val = current.getLocalVariablesR()[element];
 			int temp = val;
 			val ^= 1 << bit;
@@ -669,17 +707,19 @@ public class TinyVM {
 		}
 	}
 	
-	private void flipLocalVariablesR(int frameToFlip, int elementToFlip, int value){
+	private boolean flipLocalVariablesR(int frameToFlip, int elementToFlip, int bit){
 		TinyFrame current = this.getCallStack().get(frameToFlip);
 		
 		if(current.getLocalVariablesR().length > 0)
 		{
 
 			int val = current.getLocalVariablesR()[elementToFlip];
-			current.getLocalVariablesR()[elementToFlip] = value;
-			System.out.println("After instruction " + this.instructionCounter +" Local Variables R index " + elementToFlip  + " was flipped from " + val + " to " + value);
+			current.getLocalVariablesR()[elementToFlip] = val ^ 1 << bit;
+			System.out.println("After instruction " + this.instructionCounter +" Local Variables R index " + elementToFlip  + " was flipped from " + val + " to " + (val ^ 1 << bit));
+			return true;
 		}else{
 			System.out.println("Trying to flip element in LV_R after instruction " + this.instructionCounter + ", but is empty");
+			return false;
 		}
 	}
 	
