@@ -177,7 +177,6 @@ public class TinyVM {
 		tinyVm.checkInstructions = false;
 		
 		tinyVm.setPerformance(false);
-		long startTime = System.currentTimeMillis();
 		
 		tinyVm.numberOfInstructionToInjectFault = Integer.parseInt(args[1]);
 		
@@ -205,6 +204,8 @@ public class TinyVM {
 		TinyMethod mainMethod = tinyVm.getClasses().get(className).getMethods().get("main()");
 		int[] localVariables = new int[mainMethod.getMaxLocals()];
 		tinyVm.getCallStack().push(new TinyFrame(tinyVm, localVariables, mainMethod));
+
+		long startTime = System.currentTimeMillis();
 		
 		while(!tinyVm.getCallStack().isEmpty()) {
 			tinyVm.getCurrentFrame().execute();
