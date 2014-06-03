@@ -1,13 +1,28 @@
-RULE Flip Operand Stack Execute
+RULE Flip Random Execute
 CLASS dk.aau.d101f14.tinyvm.TinyFrame
 METHOD execute()
 AT EXIT
 BIND count : int = $0.tinyVm.numberOfInstructionToInjectFault
 IF readCounter("faults") == 0 AND
    readCounter("instructionCounter") >= count AND
-   $0.tinyVm.flipOperandStackR()
+   $0.tinyVm.flipRandom()
 DO incrementCounter("faults");
-   traceln("Method is: " +  $0.method.getMethodName() + " and Program Counter is: " + $0.codePointer);
+   traceln("Flip after execute( )");
+   traceln("Method is: " +  $0.method.getMethodName() + " and CodePointer is: " + $0.codePointer);
+   $0.tinyVm.setDebug(true)  
+ENDRULE
+
+RULE Flip Random CheckFrame
+CLASS dk.aau.d101f14.tinyvm.TinyFrame
+METHOD checkFrame()
+AT EXIT
+BIND count : int = $0.tinyVm.numberOfInstructionToInjectFault
+IF readCounter("faults") == 0 AND
+   readCounter("instructionCounter") >= count AND
+   $0.tinyVm.flipRandom()
+DO incrementCounter("faults");
+   traceln("Flip after checkFrame( )");
+   traceln("Method is: " +  $0.method.getMethodName() + " and CodePointer is: " + $0.codePointer);
    $0.tinyVm.setDebug(true)  
 ENDRULE
 

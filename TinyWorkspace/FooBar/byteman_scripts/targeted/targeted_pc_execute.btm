@@ -1,0 +1,50 @@
+RULE Get Run
+CLASS dk.aau.d101f14.tinyvm.TinyVM
+METHOD main(String[] args)
+AT ENTRY
+IF true
+DO createCounter("runs", Integer.parseInt($args[2]));
+   traceln("RUN: " + readCounter("runs"))
+ENDRULE
+
+RULE Targeted Flip Operand Stack Execute
+CLASS dk.aau.d101f14.tinyvm.TinyFrame
+METHOD execute()
+AT EXIT
+BIND count : int = $0.tinyVm.numberOfInstructionToInjectFault
+IF readCounter("faults") == 0 AND
+   readCounter("instructionCounter") >= count AND
+   $0.tinyVm.flipProgramCounter(readCounter("temp"), readCounter("runs"))
+DO incrementCounter("faults");
+   traceln("Method is: " +  $0.method.getMethodName() + " and program counter is: " + $0.codePointer);
+   $0.tinyVm.setDebug(true);
+ENDRULE
+
+RULE Increment Counter
+CLASS dk.aau.d101f14.tinyvm.TinyFrame
+METHOD execute()
+AT ENTRY
+IF TRUE
+DO incrementCounter("instructionCounter");
+   createCounter("temp", $0.tinyVm.getCallStack().size());
+   incrementCounter("temp", -1)
+ENDRULE
+
+RULE Delete Counter
+CLASS dk.aau.d101f14.tinyvm.TinyFrame
+METHOD execute()
+AT EXIT
+IF true
+DO deleteCounter("temp")
+ENDRULE
+
+RULE Disable Debug
+CLASS dk.aau.d101f14.tinyvm.TinyFrame
+METHOD execute()
+AT EXIT
+IF readCounter("faults") == 1 AND
+   readCounter("instructionCounter") > ($0.tinyVm.numberOfInstructionToInjectFault + 20)
+DO traceln("Stop display VM debug!");
+   $0.tinyVm.setDebug(false);
+   incrementCounter("faults")
+ENDRULE

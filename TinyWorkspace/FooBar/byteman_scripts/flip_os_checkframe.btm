@@ -5,7 +5,7 @@ AT EXIT
 BIND count : int = $0.tinyVm.numberOfInstructionToInjectFault
 IF readCounter("faults") == 0 AND
    readCounter("instructionCounter") >= count AND
-   $0.tinyVm.flipOperandStack()
+   $0.tinyVm.flipOperandStackR()
 DO incrementCounter("faults");
    traceln("Method is: " +  $0.method.getMethodName() + " and Program Counter is: " + $0.codePointer);
    $0.tinyVm.setDebug(true)  
