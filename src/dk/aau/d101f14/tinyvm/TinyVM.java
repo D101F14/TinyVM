@@ -284,8 +284,8 @@ public class TinyVM {
 			
 			if(current.operandStack.size() > 0)
 			{
-				int element = (int)(Math.random() * (current.operandStack.size()-1));
-				int bit = (int)(Math.random() * 7);
+				int element = (int)(Math.random() * (current.operandStack.size()));
+				int bit = (int)(Math.random() * 8);
 				int val = current.operandStack.get(element).intValue();
 				int temp = val;
 				val ^= 1 << bit;
@@ -333,8 +333,8 @@ public class TinyVM {
 			
 			if(current.operandStackR.size() > 0)
 			{
-				int element = (int)(Math.random() * (current.operandStackR.size()-1));
-				int bit = (int)(Math.random() * 7);
+				int element = (int)(Math.random() * (current.operandStackR.size()));
+				int bit = (int)(Math.random() * 8);
 				int val = current.operandStackR.get(element).intValue();
 				int temp = val;
 				val ^= 1 << bit;
@@ -368,7 +368,7 @@ public class TinyVM {
 	
 	private boolean flipProgramCounter(){
 		TinyFrame current = this.getCallStack().get((int)(Math.random() * (this.getCallStack().size())));
-		int bit = (int)(Math.random()*15);
+		int bit = (int)(Math.random()*16);
 		int pc = current.getCodePointer();
 		int temp = pc;
 		pc ^= 1 << bit;
@@ -389,7 +389,7 @@ public class TinyVM {
 	
 	private boolean flipProgramCounterR(){
 		TinyFrame current = this.getCallStack().get((int)(Math.random() * (this.getCallStack().size())));
-		int bit = (int)(Math.random()*15);
+		int bit = (int)(Math.random()*16);
 		int pcR = current.getCodePointerR();
 		int temp = pcR;
 		pcR ^= 1 << bit;
@@ -408,12 +408,12 @@ public class TinyVM {
 	}
 	
 	private boolean flipLocalHeap(){
-		TinyFrame current = this.getCallStack().get(this.getCallStack().size());
+		TinyFrame current = this.getCallStack().get(this.getCallStack().size()-1);
 		
 		if(current.getLocalHeap().entrySet().size() > 0)
 		{
-			int mode = (int)(Math.random() * 2);
-			int bit = (int)(Math.random()*15);
+			int mode = (int)(Math.random() * 3);
+			int bit = (int)(Math.random()*16);
 			Entry<SimpleEntry<Integer, String>, Integer> entryElement = null;
 			int element = (int)(Math.random()*(current.getLocalHeap().entrySet().size()));
 			int i = 0;
@@ -439,7 +439,7 @@ public class TinyVM {
 				System.out.println("After instruction " + this.instructionCounter +" Local Heap entry reference was flipped in " + entryElement.toString() + " to " + newKeyInt);
 				break;
 			case 1: //flip field name
-				bit = (int)(Math.random() * 7);
+				bit = (int)(Math.random() * 8);
 				byte[] byteString = key.getValue().getBytes();
 				element = (int)(Math.random() * (byteString.length));
 				
@@ -535,10 +535,10 @@ public class TinyVM {
 		
 		if(current.getLocalHeapR().entrySet().size() > 0)
 		{
-			int mode = (int)(Math.random() * 2);
-			int bit = (int)(Math.random()*15);
+			int mode = (int)(Math.random() * 3);
+			int bit = (int)(Math.random()*16);
 			Entry<SimpleEntry<Integer, String>, Integer> entryElement = null;
-			int element = (int)(Math.random()*(current.getLocalHeapR().entrySet().size()-1));
+			int element = (int)(Math.random()*(current.getLocalHeapR().entrySet().size()));
 			int i = 0;
 			for(Entry<SimpleEntry<Integer, String>, Integer> entry : current.getLocalHeapR().entrySet())
 			{
@@ -562,7 +562,7 @@ public class TinyVM {
 				System.out.println("After instruction " + this.instructionCounter +" Local Heap R entry reference was flipped in " + entryElement.toString() + " to " + newKeyInt);
 				break;
 			case 1: //flip field name
-				bit = (int)(Math.random() * 7);
+				bit = (int)(Math.random() * 8);
 				byte[] byteString = key.getValue().getBytes();
 				element = (int)(Math.random() * (byteString.length -1));
 				
